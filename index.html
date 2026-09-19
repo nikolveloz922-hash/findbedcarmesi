@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindBedCarmesi</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="estilos.css">
+  <meta name="theme-color" content="#800020">
+</head>
+<body>
+
+  <!-- Encabezado Principal -->
+  <header class="hero-header">
+    <div class="top-nav">
+      <button class="icon-btn">🔒</button>
+      <button class="icon-btn">📜</button>
+      <button class="icon-btn">❓</button>
+    </div>
+    <div class="logo-container">
+      <h1 class="logo-titulo">FindBed<span>Carmesí</span></h1>
+      <p class="subtitulo">Reserva inmediata en Hoteles, Moteles y Resorts</p>
+    </div>
+  </header>
+
+  <!-- Filtros Interactivos de Cristal -->
+  <main class="contenedor-principal">
+    
+    <h2>Categorías</h2>
+    <div class="grid-filtros" id="grupo-categoria">
+      <button class="glass-card active" onclick="seleccionarFiltro(this, 'categoria')">Hoteles <span class="blue-dot">🔵</span></button>
+      <button class="glass-card" onclick="seleccionarFiltro(this, 'categoria')">Resorts</button>
+      <button class="glass-card" onclick="seleccionarFiltro(this, 'categoria')">Moteles</button>
+    </div>
+
+    <h2>Ubicación</h2>
+    <div class="grid-filtros">
+      <select id="select-estado" class="glass-select" onchange="cargarCiudades()">
+        <option value="Caracas (DC)">Caracas (DC)</option>
+        <option value="Cojedes">Cojedes</option>
+        <option value="Carabobo">Carabobo</option>
+      </select>
+
+      <select id="select-ciudad" class="glass-select" onchange="cargarZonas()">
+        <option value="Chacao">Chacao</option>
+      </select>
+
+      <select id="select-zona" class="glass-select">
+        <option value="Altamira">Altamira</option>
+      </select>
+    </div>
+
+    <!-- Botón de Búsqueda -->
+    <button class="btn-buscar" onclick="buscarDisponibilidad()">BUSCAR DISPONIBILIDAD</button>
+
+    <!-- Panel de Anuncios -->
+    <div class="panel-anuncios">
+      <p>📢 Espacio Publicitario Destacado</p>
+    </div>
+
+  </main>
+
+  <script src="hoteles.js"></script>
+</body>
+</html>
