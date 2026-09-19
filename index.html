@@ -1,3 +1,5 @@
+
+          
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,10 +12,11 @@
 </head>
 <body>
 
-  <!-- Encabezado con imagen de título -->
+  <!-- Encabezado -->
   <header class="hero-header">
     <div class="top-nav">
-      <button class="icon-btn">🔒</button>
+      <button class="icon-btn" onclick="abrirConsolaAdmin()">🔒</button>
+      <a href="politicas.html" style="color: white; text-decoration: none; font-size: 0.85rem; margin-left: auto;">Guía y Políticas 📜</a>
     </div>
     <img src="Encabezado.jpg" alt="FindBed Carmesí" class="img-encabezado">
     <p class="subtitulo">Reserva inmediata en Hoteles, Moteles y Resorts</p>
@@ -27,40 +30,50 @@
   <!-- Contenedor Principal de Búsqueda -->
   <main class="contenedor-principal">
     
-    <h2>Categorías</h2>
+    <h2>Tipo de Hospedaje</h2>
     <div class="grid-filtros">
-      <button class="glass-card active" onclick="seleccionarFiltro(this, 'Hoteles')">Hoteles</button>
-      <button class="glass-card" onclick="seleccionarFiltro(this, 'Resorts')">Resorts</button>
-      <button class="glass-card" onclick="seleccionarFiltro(this, 'Moteles')">Moteles</button>
+      <button class="glass-card active-azul" onclick="seleccionarCategoria(this, 'Hoteles')">Hoteles</button>
+      <button class="glass-card" onclick="seleccionarCategoria(this, 'Resorts')">Resorts</button>
+      <button class="glass-card" onclick="seleccionarCategoria(this, 'Moteles')">Moteles</button>
+    </div>
+
+    <h2>Nivel de Categoría</h2>
+    <div class="grid-filtros">
+      <button class="glass-card active-azul" onclick="seleccionarNivel(this, 'Todos')">Todos</button>
+      <button class="glass-card" onclick="seleccionarNivel(this, 'Premium')">Premium</button>
+      <button class="glass-card" onclick="seleccionarNivel(this, 'Alta Gama')">Alta Gama</button>
+      <button class="glass-card" onclick="seleccionarNivel(this, 'Estándar')">Estándar</button>
+      <button class="glass-card" onclick="seleccionarNivel(this, 'Básico')">Básico</button>
+      <button class="glass-card" onclick="seleccionarNivel(this, 'Económica')">Económica</button>
     </div>
 
     <h2>Ubicación</h2>
     <div class="grid-ubicacion">
       <div class="campo-grupo">
         <label>Estado</label>
-        <select id="select-estado" class="glass-select" onchange="cargarCiudades()">
-          <option value="Caracas (DC)">Caracas (DC)</option>
-          <option value="Carabobo">Carabobo</option>
-          <option value="Cojedes">Cojedes</option>
-        </select>
+        <select id="select-estado" class="glass-select" onchange="cargarCiudades()"></select>
       </div>
 
       <div class="campo-grupo">
         <label>Ciudad</label>
-        <select id="select-ciudad" class="glass-select" onchange="cargarZonas()">
-          <option value="Chacao">Chacao</option>
-        </select>
+        <select id="select-ciudad" class="glass-select" onchange="cargarZonas()"></select>
       </div>
 
       <div class="campo-grupo">
         <label>Zona</label>
-        <select id="select-zona" class="glass-select">
-          <option value="Altamira">Altamira</option>
-        </select>
+        <select id="select-zona" class="glass-select"></select>
       </div>
     </div>
 
-    <button class="btn-buscar" onclick="buscarDisponibilidad()">Buscar Disponibilidad 🔍</button>
+    <button class="btn-buscar" onclick="buscarDisponibilidad()" style="width: 100%; padding: 14px; background: linear-gradient(90deg, #0056b3, #00a2ff); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 162, 255, 0.4);">
+      Buscar Disponibilidad 🔍
+    </button>
+
+    <!-- Zona para Mostrar la Confirmación y el Código de 4 Dígitos -->
+    <div id="confirmacion-reserva" style="display: none;"></div>
+
+    <!-- Lista Desplegada de Hoteles -->
+    <section id="lista-hoteles" class="contenedor-lista"></section>
 
     <!-- Panel Publicitario -->
     <div class="panel-anuncios">
@@ -69,6 +82,109 @@
     </div>
 
   </main>
+
+  <!-- MODAL DE PAGO MÓVIL Y ADJUNTO DE COMPROBANTE -->
+  <div id="modal-pago" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: #1a1a2e; border: 1px solid #00d4ff; border-radius: 15px; padding: 20px; width: 90%; max-width: 420px; color: white;">
+      <h2 style="margin-top: 0; color: #00d4ff; text-align: center;">Datos para Pago Móvil</h2>
+      <p style="font-size: 0.85rem; text-align: center;">Reservando en: <strong id="pago-hotel-nombre">---</strong></p>
+      
+      <!-- Cuadro Copiable Rápido -->
+      <div style="background: rgba(255,255,255,0.08); padding: 12px; border-radius: 10px; margin-bottom: 12px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <small style="opacity: 0.7; display:block;">Banco:</small>
+            <strong id="pm-banco">0102 Venezuela</strong>
+          </div>
+          <button id="btn-copy-banco" onclick="copiarDato('0102', 'btn-copy-banco')" style="background: #0056b3; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Copiar 📋</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <small style="opacity: 0.7; display:block;">Cédula:</small>
+            <strong id="pm-cedula">30585882</strong>
+          </div>
+          <button id="btn-copy-cedula" onclick="copiarDato('30585882', 'btn-copy-cedula')" style="background: #0056b3; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Copiar 📋</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <small style="opacity: 0.7; display:block;">Teléfono:</small>
+            <strong id="pm-telefono">0422-0048951</strong>
+          </div>
+          <button id="btn-copy-telefono" onclick="copiarDato('04220048951', 'btn-copy-telefono')" style="background: #0056b3; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Copiar 📋</button>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+        <p style="margin:0; text-align: center; color: #4eff91; font-weight: bold;">Monto Anticipo: USD $<span id="pago-monto-usd">0</span> (al cambio BCV)</p>
+      </div>
+
+      <!-- Reloj Regresivo -->
+      <div style="text-align: center; margin: 10px 0;">
+        <span style="font-size: 0.8rem; opacity: 0.8;">Tiempo límite para subir el capture:</span>
+        <div id="cronometro-pago" style="font-size: 1.6rem; font-weight: bold; color: #ff4d6d;">15:00</div>
+      </div>
+
+      <!-- Formulario para subir comprobante -->
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 0.8rem; display: block; margin-bottom: 4px;">N° de Referencia:</label>
+        <input type="text" id="input-comprobante" placeholder="Ej: 849204" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #0f0f1b; color: white;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="font-size: 0.8rem; display: block; margin-bottom: 4px;">Subir foto / captura del Pago Móvil:</label>
+        <input type="file" id="input-capture-file" accept="image/*" style="width: 100%; font-size: 0.8rem; color: #ccc;">
+      </div>
+
+      <button onclick="confirmarReservaPago()" style="width: 100%; background: #00c853; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem;">Enviar Comprobante y Obtener Código 🔑</button>
+      <button onclick="cerrarModalPago()" style="width: 100%; background: transparent; color: #aaa; border: none; padding: 8px; margin-top: 5px; cursor: pointer;">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN (CANDADO 🔒) -->
+  <div id="modal-admin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; overflow-y: auto; align-items: center; justify-content: center;">
+    <div style="background: #121212; border: 1px solid #ff4d6d; border-radius: 15px; padding: 20px; width: 90%; max-width: 500px; color: white; margin: 20px auto;">
+      <h2 style="color: #ff4d6d; margin-top: 0;">Panel de Administración 🔒</h2>
+      
+      <h3>Publicar Hospedaje</h3>
+      <input type="text" id="admin-nombre" placeholder="Nombre del Hotel" style="width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 5px; border: 1px solid #333; background: #222; color: white;">
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <select id="admin-categoria" style="flex: 1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+          <option value="Hoteles">Hoteles</option>
+          <option value="Resorts">Resorts</option>
+          <option value="Moteles">Moteles</option>
+        </select>
+        <select id="admin-nivel" style="flex: 1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+          <option value="Premium">Premium</option>
+          <option value="Alta Gama">Alta Gama</option>
+          <option value="Estándar">Estándar</option>
+          <option value="Básico">Básico</option>
+          <option value="Económica">Económica</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+        <input type="text" id="admin-estado" placeholder="Estado (ej: Cojedes)" style="flex:1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+        <input type="text" id="admin-ciudad" placeholder="Ciudad (ej: Tinaquillo)" style="flex:1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+      </div>
+
+      <input type="text" id="admin-zona" placeholder="Zona (ej: Centro)" style="width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 5px; background: #222; color: white;">
+
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <input type="number" id="admin-precio" placeholder="Precio Base USD" style="flex:1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+        <input type="number" id="admin-descuento" placeholder="% Descuento" style="flex:1; padding: 8px; border-radius: 5px; background: #222; color: white;">
+      </div>
+
+      <button onclick="agregarNuevoHotelAdmin()" style="width: 100%; background: #007bb5; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; cursor: pointer;">Publicar Hospedaje ➕</button>
+
+      <h3>Hospedajes Activos</h3>
+      <div id="lista-admin-hoteles" style="max-height: 180px; overflow-y: auto;"></div>
+
+      <button onclick="cerrarModalAdmin()" style="width: 100%; background: #555; color: white; border: none; padding: 10px; border-radius: 8px; margin-top: 15px; cursor: pointer;">Cerrar Panel</button>
+    </div>
+  </div>
 
   <script src="hoteles.js"></script>
   <script>
@@ -79,5 +195,4 @@
     }
   </script>
 </body>
-      </html>
-          
+</html>
