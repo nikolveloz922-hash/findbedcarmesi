@@ -1,109 +1,66 @@
-
-          
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FindBed Carmesí - Reservas e Hospedaje en Venezuela</title>
+  <title>FindBedCarmesi - Reservas de Hoteles</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header class="app-header">
-    <h1>FindBed Carmesí</h1>
-    <button id="adminBtn" class="lock-btn" title="Panel de Administración">🔒</button>
+  <!-- ENCABEZADO -->
+  <header class="header">
+    <div class="logo-container">
+      <h1>FindBedCarmesi 🏨</h1>
+      <p>Reserva tu habitación al mejor precio</p>
+    </div>
   </header>
 
-  <main class="container">
-    <section class="filter-card">
-      <h2>Tipo de Hospedaje</h2>
-      <div class="button-group" id="typeGroup">
-        <button class="filter-btn active" data-value="Todos">Todos</button>
-        <button class="filter-btn" data-value="Hoteles">Hoteles</button>
-        <button class="filter-btn" data-value="Resorts">Resorts</button>
-        <button class="filter-btn" data-value="Moteles">Moteles</button>
-        <button class="filter-btn" data-value="Posadas">Posadas</button>
-      </div>
-
-      <h2>Nivel de Categoría</h2>
-      <div class="button-group" id="categoryGroup">
-        <button class="filter-btn active" data-value="Todas">Todas</button>
-        <button class="filter-btn" data-value="Estándar">Estándar</button>
-        <button class="filter-btn" data-value="Básico">Básico</button>
-        <button class="filter-btn" data-value="Económica">Económica</button>
-        <button class="filter-btn" data-value="Lujo">Lujo</button>
-      </div>
-
-      <h2>Ubicación</h2>
-      <div class="select-group">
-        <label for="stateSelect">Estado</label>
-        <select id="stateSelect">
-          <option value="">Todos los Estados</option>
-        </select>
-
-        <label for="citySelect">Ciudad</label>
-        <select id="citySelect" disabled>
-          <option value="">Todas las Ciudades</option>
-        </select>
-
-        <label for="zoneSelect">Zona</label>
-        <select id="zoneSelect" disabled>
-          <option value="">Todas las Zonas</option>
-        </select>
-      </div>
-
-      <button id="searchBtn" class="main-search-btn">Buscar Disponibilidad 🔍</button>
-    </section>
-
-    <!-- Sección de Resultados -->
-    <section class="results-section">
-      <div id="resultsList" class="hotel-grid"></div>
-      <div id="noResults" class="no-results hidden">
-        ⚠️ No hay opciones disponibles con los filtros seleccionados.
-      </div>
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="main-container">
+    <section class="sec-hoteles">
+      <h2>Alojamientos Disponibles</h2>
+      <div id="lista-hoteles" class="grid-hoteles"></div>
     </section>
   </main>
 
-  <!-- Modal de Pago y Reserva -->
-  <div id="bookingModal" class="modal hidden">
+  <!-- MODAL DE PAGO MÓVIL -->
+  <div id="modal-pago" class="modal">
     <div class="modal-content">
-      <span id="closeModal" class="close-btn">&times;</span>
-      <h2 id="modalHotelTitle">Reservar Hospedaje</h2>
-      <p id="modalHotelDetails"></p>
+      <span class="cerrar" onclick="cerrarModal('modal-pago')">&times;</span>
+      <h3>Registrar Pago Móvil 💳</h3>
+      <p class="txt-instrucciones">Realiza el pago del anticipo y coloca aquí el número de referencia:</p>
       
-      <div class="price-breakdown">
-        <p>Precio Regular: <span id="modalOriginalPrice"></span></p>
-        <p class="discount-text">Descuento Especial: <span id="modalDiscount"></span></p>
-        <h3>Monto Final a Pagar: <span id="modalFinalPrice"></span></h3>
+      <div class="datos-pago-box">
+        <p><strong>Banco:</strong> Banesco / Banco de Venezuela</p>
+        <p><strong>Cédula / RIF:</strong> V-00000000</p>
+        <p><strong>Teléfono:</strong> 0412-0000000</p>
       </div>
 
-      <hr>
+      <form onsubmit="procesarPago(event)">
+        <div class="form-group">
+          <label for="num-referencia">Número de Referencia (Últimos 4 u 8 dígitos):</label>
+          <input type="number" id="num-referencia" required placeholder="Ej: 849201">
+        </div>
+        <button type="submit" class="btn-confirmar">Confirmar Pago y Reservar</button>
+      </form>
+    </div>
+  </div>
 
-      <h3>Datos para Pago Móvil</h3>
-      <div class="pago-movil-card">
-        <p><strong>Banco:</strong> Banesco (0134)</p>
-        <p><strong>C.I. / RIF:</strong> J-501234567</p>
-        <p><strong>Teléfono:</strong> 0412-1234567</p>
-        <button id="copyPagoBtn" class="copy-btn">📋 Copiar Datos de Pago</button>
+  <!-- MODAL COMPROBANTE AL USUARIO -->
+  <div id="modal-comprobante" class="modal">
+    <div class="modal-content modal-exito">
+      <h3>¡Reserva Registrada con Éxito! 🎉</h3>
+      <p>Hemos recibido tu reporte de Pago Móvil.</p>
+      <div class="resumen-codigo">
+        <p>Código de Confirmación: <strong id="codigo-reserva-txt">----</strong></p>
+        <p>N° Referencia: <strong id="ref-recibida-txt">----</strong></p>
       </div>
-
-      <div class="form-group">
-        <label for="guestName">Nombre Completo:</label>
-        <input type="text" id="guestName" placeholder="Tu nombre y apellido">
-
-        <label for="guestPhone">Número de Contacto / WhatsApp:</label>
-        <input type="tel" id="guestPhone" placeholder="04XX-XXXXXXX">
-
-        <label for="refNumber">Número de Referencia del Pago Móvil:</label>
-        <input type="text" id="refNumber" placeholder="Ej: 00123456">
-      </div>
-
-      <button id="confirmBookingBtn" class="action-btn">Confirmar Reservación 🚀</button>
+      <p class="txt-nota">Tu reserva está en proceso de validación. Presenta este código en la recepción del hotel al llegar.</p>
+      <button class="btn-confirmar" onclick="cerrarModal('modal-comprobante')">Entendido</button>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
-                  </html>
-          
+</html>
