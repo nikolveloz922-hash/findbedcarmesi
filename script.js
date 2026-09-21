@@ -1,4 +1,9 @@
-// Estructura de datos: Estado -> Ciudades -> Zonas
+//
+==========================================
+// 1. VARIABLES GLOBALES Y DATOS DE UBICACIÓN
+// ==========================================
+let categoriaSeleccionada = "Hotel";
+
 const locationsData = {
   "Cojedes": {
     "San Carlos": ["Centro Histórico", "Av. Bolívar", "Av. Universidad", "Zona Industrial", "San Rafael"],
@@ -96,113 +101,53 @@ const locationsData = {
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  const selectEstado = document.getElementById("select-estado");
-  const selectCiudad = document.getElementById("select-ciudad");
-  const selectZona = document.getElementById("select-zona");
+// ANUNCIO PUBLICITARIO
+const ANUNCIO_BANNER = {
+  titulo: "Pink Weather - Diseños Exclusivos",
+  imagen: "Anuncio-PinkWhatever.jpg",
+  enlace: "#"
+};
 
-  // 1. Cargar Estados al iniciar
-  function loadEstados() {
-    selectEstado.innerHTML = '<option value="">Selecciona un Estado</option>';
-    selectCiudad.innerHTML = '<option value="">Selecciona una Ciudad</option>';
-    selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
-    
-    selectCiudad.disabled = true;
-    selectZona.disabled = true;
-
-    Object.keys(locationsData).sort().forEach(estado => {
-      const option = document.createElement("option");
-      option.value = estado;
-      option.textContent = estado;
-      selectEstado.appendChild(option);
-    });
+// INVENTARIO INICIAL CON EL HOTEL DE LUJO EN VALENCIA
+let inventarioHoteles = JSON.parse(localStorage.getItem('findbed_hoteles')) || [
+  {
+    id: 101,
+    nombre: "Hotel de Lujo Carmesí Royal",
+    categoria: "Hotel",
+    estado: "Carabobo",
+    ciudad: "Valencia",
+    zona: "Viñedo",
+    moneda: "EUR",
+    precioRecepcion: 120,
+    descuento: 15,
+    abono: 25,
+    foto: "hotel1_piscina.jpg",
+    imagenesExtra: [
+      "hotel1_piscina.jpg",
+      "hotel1_habitacion.jpg",
+      "hotel1_bano.jpg",
+      "hotel1_restaurante.jpg"
+    ],
+    descripcion: "Alojamiento VIP de 5 estrellas. Incluye piscina climatizada, restaurante gourmet, suites ejecutivas con baño de lujo y servicio a la habitación 24/7."
   }
+];
 
-  // 2. Manejar cambio de Estado
-  selectEstado.addEventListener("change", (e) => {
-    const selectedEstado = e.target.value;
+let hotelSeleccionado = null;
 
-    selectCiudad.innerHTML = '<option value="">Selecciona una Ciudad</option>';
-    selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
-    selectZona.disabled = true;
-
-    if (selectedEstado && locationsData[selectedEstado]) {
-      selectCiudad.disabled = false;
-      Object.keys(locationsData[selectedEstado]).sort().forEach(ciudad => {
-        const option = document.createElement("option");
-        option.value = ciudad;
-        option.textContent = ciudad;
-        selectCiudad.appendChild(option);
-      });
-    } else {
-      selectCiudad.disabled = true;
-    }
-  });
-
-  // 3. Manejar cambio de Ciudad
-  selectCiudad.addEventListener("change", (e) => {
-    const selectedEstado = selectEstado.value;
-    const selectedCiudad = e.target.value;
-
-    selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
-
-    if (selectedEstado && selectedCiudad && locationsData[selectedEstado][selectedCiudad]) {
-      selectZona.disabled = false;
-      locationsData[selectedEstado][selectedCiudad].forEach(zona => {
-        const option = document.createElement("option");
-        option.value = zona;
-        option.textContent = zona;
-        selectZona.appendChild(option);
-      });
-    } else {
-      selectZona.disabled = true;
-    }
-  });
-
-  // 4. PASAR AL SIGUIENTE PASO: Al seleccionar la zona, mostrar hoteles
-  selectZona.addEventListener("change", (e) => {
-    const estado = selectEstado.value;
-    const ciudad = selectCiudad.value;
-    const zona = e.target.value;
-
-    if (zona) {
-      // Oculta el contenedor del buscador/selectores
-      const contenedorBuscador = document.getElementById("seccion-ubicacion");
-      if (contenedorBuscador) {
-        contenedorBuscador.style.display = "none";
-      }
-
-      // Muestra la sección de hoteles
-      const contenedorHoteles = document.getElementById("seccion-hoteles");
-      if (contenedorHoteles) {
-        contenedorHoteles.style.display = "block";
-      }
-
-      // Si tienes tu propia función para cargar los hoteles en pantalla, la llamas aquí:
-      if (typeof cargarHoteles === "function") {
-        cargarHoteles(estado, ciudad, zona);
-      }
-    }
-  });
-
-  loadEstados();
-});
-  // ==========================================
-// INTEGRACIÓN NOTIFICACIÓN PRIVADA A TELEGRAM
-// ==========================================
-
-// Reemplaza estas comillas con tu Token y Chat ID en tu equipo local
+// Configuración de Telegram
 const TELEGRAM_BOT_TOKEN = "INGRESA_AQUI_TU_TOKEN"; 
 const TELEGRAM_CHAT_ID = "INGRESA_AQUI_TU_CHAT_ID";   
 
-/**
- * Envía el reporte detallado de la reserva a tu Telegram personal
- */
+// ==========================================
+// 2. ENVÍO A TELEGRAM
+// ==========================================
 async function enviarNotificacionTelegram(reserva) {
   if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "INGRESA_AQUI_TU_TOKEN") {
-    console.warn("Telegram: Configura tu Token y Chat ID para recibir notificaciones.");
+    console.warn("Telegram: Configura tu Token y Chat ID.");
     return;
   }
+
+  const sim = reserva.moneda === 'EUR' ? '€' : '$';
 
   const mensaje = `
 📥 *¡NUEVA RESERVA CONFIRMADA!*
@@ -219,23 +164,19 @@ async function enviarNotificacionTelegram(reserva) {
 • *Ciudad:* ${reserva.ciudad}
 • *Zona / Sector:* ${reserva.zona}
 
-💰 *DESGLOSE FINANCIERO Y DIVISA:*
-• *Moneda de Cobro:* ${reserva.divisa} (${reserva.simboloDivisa})
-• *Precio Recepción:* ${reserva.precioOficial}
-• *Descuento App:* ${reserva.descuento}
-• *Monto Abono (Pago Móvil):* ${reserva.abono}
-• *Restante a Pagar en Recepción:* ${reserva.restanteHotel}
+💰 *DESGLOSE FINANCIERO:*
+• *Moneda de Cobro:* ${reserva.moneda}
+• *Precio Recepción:* ${sim}${reserva.precioRecepcion}
+• *Descuento App:* -${sim}${reserva.descuento}
+• *Monto Abono (Pago Móvil):* ${sim}${reserva.abono}
 
 🔢 *DATOS DE VERIFICACIÓN:*
 • *Código Único:* \`${reserva.codigo}\`
 • *N° Referencia Pago Móvil:* \`${reserva.referencia}\`
-• *Captura Adjunta:* ${reserva.tieneCaptura ? "✅ Adjuntada" : "❌ No adjunta"}
   `;
 
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
   try {
-    await fetch(url, {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -244,9 +185,304 @@ async function enviarNotificacionTelegram(reserva) {
         parse_mode: "Markdown"
       })
     });
-    console.log("Reporte privado enviado a Telegram.");
   } catch (error) {
-    console.error("Error al enviar notificación a Telegram:", error);
+    console.error("Error enviando a Telegram:", error);
   }
+}
+
+// ==========================================
+// 3. CONTROLADOR DE PASOS Y EVENTOS
+// ==========================================
+function irAlPaso(paso) {
+  const pasos = [
+    "paso-1-filtros",
+    "paso-2-catalogo",
+    "paso-3-detalle",
+    "paso-4-habitacion",
+    "paso-5-desglose",
+    "paso-6-pago",
+    "paso-7-recibo",
+    "paso-admin-login",
+    "paso-admin-panel"
+  ];
+
+  pasos.forEach((id, index) => {
+    const elem = document.getElementById(id);
+    if (elem) {
+      if (typeof paso === 'number') {
+        elem.style.display = (index + 1 === paso) ? "block" : "none";
+      } else if (paso === 'admin-login') {
+        elem.style.display = (id === 'paso-admin-login') ? "block" : "none";
+      } else if (paso === 'admin-panel') {
+        elem.style.display = (id === 'paso-admin-panel') ? "block" : "none";
+      }
+    }
+  });
+}
+
+function verDetalleHotel(id) {
+  hotelSeleccionado = inventarioHoteles.find(h => h.id === id);
+  if (!hotelSeleccionado) return;
+
+  const sim = hotelSeleccionado.moneda === 'EUR' ? '€' : '$';
+
+  if (document.getElementById("detalle-nombre")) document.getElementById("detalle-nombre").textContent = hotelSeleccionado.nombre;
+  if (document.getElementById("detalle-ubicacion")) document.getElementById("detalle-ubicacion").textContent = `📍 ${hotelSeleccionado.ciudad}, ${hotelSeleccionado.estado} - ${hotelSeleccionado.zona}`;
+  if (document.getElementById("detalle-descripcion")) document.getElementById("detalle-descripcion").textContent = hotelSeleccionado.descripcion;
+  if (document.getElementById("detalle-precio")) document.getElementById("detalle-precio").textContent = `Precio Recepción: ${sim}${hotelSeleccionado.precioRecepcion}`;
+
+  // Cargar imagen principal y galería
+  const imgElem = document.getElementById("detalle-foto");
+  if (imgElem) {
+    imgElem.src = hotelSeleccionado.foto || "hotel1_piscina.jpg";
+    imgElem.style.display = "block";
   }
+
+  // Cargar montos en el desglose
+  if (document.getElementById("monto-recepcion")) document.getElementById("monto-recepcion").textContent = `${sim}${hotelSeleccionado.precioRecepcion}`;
+  if (document.getElementById("monto-descuento")) document.getElementById("monto-descuento").textContent = `-${sim}${hotelSeleccionado.descuento}`;
+  if (document.getElementById("monto-total")) document.getElementById("monto-total").textContent = `${sim}${hotelSeleccionado.precioRecepcion - hotelSeleccionado.descuento}`;
+  if (document.getElementById("monto-abono")) document.getElementById("monto-abono").textContent = `${sim}${hotelSeleccionado.abono}`;
+
+  irAlPaso(3);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const selectEstado = document.getElementById("select-estado");
+  const selectCiudad = document.getElementById("select-ciudad");
+  const selectZona = document.getElementById("select-zona");
+
+  // Mostrar Banner publicitario de Pink Weather si existe contenedor
+  const contenedorBanner = document.getElementById("banner-publicitario");
+  if (contenedorBanner) {
+    contenedorBanner.innerHTML = `
+      <div style="margin: 10px 0; text-align: center;">
+        <p style="font-size: 12px; color: #888; margin-bottom: 3px;">Anuncio Publicitario</p>
+        <img src="${ANUNCIO_BANNER.imagen}" alt="${ANUNCIO_BANNER.titulo}" style="width: 100%; max-height: 120px; object-fit: cover; border-radius: 8px;">
+      </div>
+    `;
+  }
+
+  // A. Llenar desplegables de ubicación
+  if (selectEstado) {
+    selectEstado.innerHTML = '<option value="">Selecciona un Estado</option>';
+    selectCiudad.innerHTML = '<option value="">Selecciona una Ciudad</option>';
+    selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
+
+    Object.keys(locationsData).sort().forEach(estado => {
+      const option = document.createElement("option");
+      option.value = estado;
+      option.textContent = estado;
+      selectEstado.appendChild(option);
+    });
+
+    selectEstado.addEventListener("change", (e) => {
+      const selectedEstado = e.target.value;
+      selectCiudad.innerHTML = '<option value="">Selecciona una Ciudad</option>';
+      selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
+      selectZona.disabled = true;
+
+      if (selectedEstado && locationsData[selectedEstado]) {
+        selectCiudad.disabled = false;
+        Object.keys(locationsData[selectedEstado]).sort().forEach(ciudad => {
+          const option = document.createElement("option");
+          option.value = ciudad;
+          option.textContent = ciudad;
+          selectCiudad.appendChild(option);
+        });
+      }
+    });
+
+    selectCiudad.addEventListener("change", (e) => {
+      const selectedEstado = selectEstado.value;
+      const selectedCiudad = e.target.value;
+      selectZona.innerHTML = '<option value="">Selecciona una Zona</option>';
+
+      if (selectedEstado && selectedCiudad && locationsData[selectedEstado][selectedCiudad]) {
+        selectZona.disabled = false;
+        locationsData[selectedEstado][selectedCiudad].forEach(zona => {
+          const option = document.createElement("option");
+          option.value = zona;
+          option.textContent = zona;
+          selectZona.appendChild(option);
+        });
+      }
+    });
+
+    selectZona.addEventListener("change", (e) => {
+      const zonaSel = e.target.value;
+      if (zonaSel) {
+        const lista = document.getElementById("lista-hoteles-cards");
+        
+        // Filtrar hoteles por la selección realizada
+        const encontrados = inventarioHoteles.filter(h => 
+          h.estado.toLowerCase() === selectEstado.value.toLowerCase() &&
+          h.ciudad.toLowerCase() === selectCiudad.value.toLowerCase() &&
+          h.zona.toLowerCase() === zonaSel.toLowerCase() &&
+          h.categoria === categoriaSeleccionada
+        );
+
+        if (lista) {
+          if (encontrados.length === 0) {
+            lista.innerHTML = `
+              <div class="card-hotel">
+                <p>⚠️ No hay ${categoriaSeleccionada}s registrados en esta zona aún.</p>
+              </div>`;
+          } else {
+            lista.innerHTML = encontrados.map(h => {
+              const sim = h.moneda === 'EUR' ? '€' : '$';
+              return `
+                <div class="card-hotel" style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+                  <img src="${h.foto}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 6px;">
+                  <h3 style="margin-top: 8px;">${h.nombre}</h3>
+                  <p>📍 ${h.ciudad} - ${h.zona}</p>
+                  <p>💰 Precio: <strong>${sim}${h.precioRecepcion}</strong></p>
+                  <button class="btn-principal" onclick="verDetalleHotel(${h.id})">Ver Detalles 🔍</button>
+                </div>`;
+            }).join('');
+          }
+        }
+        irAlPaso(2);
+      }
+    });
+  }
+
+  // B. Botones de categoría
+  const botonesCategoria = document.querySelectorAll(".btn-categoria");
+  botonesCategoria.forEach(boton => {
+    boton.addEventListener("click", (e) => {
+      botonesCategoria.forEach(b => b.classList.remove("activo"));
+      e.currentTarget.classList.add("activo");
+      categoriaSeleccionada = e.currentTarget.getAttribute("data-tipo") || "Hotel";
+    });
+  });
+
+  // C. Formulario de Pago
+  const formPago = document.getElementById("form-pago-movil");
+  if (formPago) {
+    formPago.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const selectHabitacion = document.getElementById("select-habitacion");
+      const habitacionTexto = selectHabitacion ? selectHabitacion.value : "Matrimonial (2 Personas)";
+
+      const h = hotelSeleccionado || inventarioHoteles[0];
+      const sim = h.moneda === 'EUR' ? '€' : '$';
+
+      const datosReserva = {
+        titular: document.getElementById("pago-nombre")?.value || "Cliente",
+        cedula: document.getElementById("pago-cedula")?.value || "N/A",
+        hotel: h.nombre,
+        tipoCategoria: categoriaSeleccionada,
+        habitacion: habitacionTexto,
+        estado: selectEstado ? selectEstado.value : h.estado,
+        ciudad: selectCiudad ? selectCiudad.value : h.ciudad,
+        zona: selectZona ? selectZona.value : h.zona,
+        moneda: h.moneda,
+        precioRecepcion: h.precioRecepcion,
+        descuento: h.descuento,
+        abono: h.abono,
+        codigo: "CARMESI-" + Math.floor(100000 + Math.random() * 900000),
+        referencia: document.getElementById("pago-referencia")?.value || "N/A"
+      };
+
+      await enviarNotificacionTelegram(datosReserva);
+
+      if(document.getElementById("reporte-codigo")) document.getElementById("reporte-codigo").textContent = datosReserva.codigo;
+      if(document.getElementById("reporte-cliente")) document.getElementById("reporte-cliente").textContent = datosReserva.titular;
+      if(document.getElementById("reporte-hotel")) document.getElementById("reporte-hotel").textContent = datosReserva.hotel;
+      if(document.getElementById("reporte-monto-restante")) document.getElementById("reporte-monto-restante").textContent = `${sim}${datosReserva.precioRecepcion - datosReserva.descuento - datosReserva.abono}`;
+
+      irAlPaso(7);
+    });
+  }
+});
+
+// REGISTRO DEL SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+// ==========================================
+// 4. MÓDULO ADMINISTRADOR (CLAVE Y GESTIÓN)
+// ==========================================
+const ADMIN_KEY = "Peterparker3";
+
+function guardarInventario() {
+  localStorage.setItem('findbed_hoteles', JSON.stringify(inventarioHoteles));
+}
+
+function autenticarAdmin() {
+  const inputPass = document.getElementById("input-admin-pass").value;
+  if (inputPass === ADMIN_KEY) {
+    document.getElementById("paso-admin-login").style.display = "none";
+    document.getElementById("paso-admin-panel").style.display = "block";
+    renderizarListaAdmin();
+  } else {
+    alert("❌ Contraseña incorrecta.");
+  }
+}
+
+function renderizarListaAdmin() {
+  const contenedor = document.getElementById("admin-lista-hoteles");
+  if (!contenedor) return;
+
+  if (inventarioHoteles.length === 0) {
+    contenedor.innerHTML = "<p>No hay hospedajes agregados aún.</p>";
+    return;
+  }
+
+  contenedor.innerHTML = inventarioHoteles.map((h, index) => {
+    const sim = h.moneda === 'EUR' ? '€' : '$';
+    return `
+      <div class="card-hotel" style="margin-bottom: 10px; border-left: 4px solid #e63946; padding: 10px; text-align: left;">
+        <h4>${h.nombre} (${h.categoria})</h4>
+        <p>📍 ${h.ciudad}, ${h.estado} - ${h.zona}</p>
+        <p>💰 Precio: ${sim}${h.precioRecepcion} | Abono: ${sim}${h.abono}</p>
+        <button onclick="borrarHotel(${index})" style="background: #e63946; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">🗑️ Borrar</button>
+      </div>`;
+  }).join('');
+}
+
+function borrarHotel(index) {
+  if (confirm("¿Deseas borrar este alojamiento?")) {
+    inventarioHoteles.splice(index, 1);
+    guardarInventario();
+    renderizarListaAdmin();
+  }
+}
+
+// Registrar nuevos hoteles desde el admin
+document.addEventListener("DOMContentLoaded", () => {
+  const formAdmin = document.getElementById("form-admin-hotel");
+  if (formAdmin) {
+    formAdmin.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const nuevoHotel = {
+        id: Date.now(),
+        nombre: document.getElementById("admin-nombre").value,
+        categoria: document.getElementById("admin-categoria").value,
+        estado: document.getElementById("admin-estado").value,
+        ciudad: document.getElementById("admin-ciudad").value,
+        zona: document.getElementById("admin-zona").value,
+        moneda: document.getElementById("admin-moneda").value,
+        precioRecepcion: parseFloat(document.getElementById("admin-precio-rec").value),
+        descuento: parseFloat(document.getElementById("admin-descuento").value),
+        abono: parseFloat(document.getElementById("admin-abono").value),
+        foto: document.getElementById("admin-foto").value || "hotel1_piscina.jpg",
+        descripcion: document.getElementById("admin-descripcion").value
+      };
+
+      inventarioHoteles.push(nuevoHotel);
+      guardarInventario();
+      renderizarListaAdmin();
+      formAdmin.reset();
+      alert("✅ ¡Hospedaje publicado con éxito!");
+    });
+  }
+});
+
       
