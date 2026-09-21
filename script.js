@@ -1,31 +1,63 @@
 // ==========================================
-// 1. BASE DE DATOS DE LOS 23 ESTADOS Y D.C.
+// 1. BASE DE DATOS DE LOS 23 ESTADOS DE VENEZUELA Y D.C.
 // ==========================================
 const locationsData = {
-  "Amazonas": { "Puerto Ayacucho": ["Centro", "Av. Orinoco"] },
-  "Anzoátegui": { "Lechería": ["El Morro", "Av. Principal"], "Puerto La Cruz": ["Paseo Colón"] },
-  "Apure": { "San Fernando": ["Centro", "Paseo Libertador"] },
-  "Aragua": { "Maracay": ["Las Delicias", "Base Aragua", "El Castaño"] },
-  "Barinas": { "Barinas": ["Alto Barinas", "Centro"] },
-  "Bolívar": { "Puerto Ordaz": ["Alta Vista", "Chilemex"], "Ciudad Bolívar": ["Casco Histórico"] },
-  "Carabobo": { "Valencia": ["Viñedo", "Prebo", "El Trigal", "Naguanagua", "Mañongo"], "Puerto Cabello": ["Quizandal", "Casco Histórico"] },
-  "Cojedes": { "Tinaquillo": ["Centro", "Av. Miranda", "Buenos Aires"], "San Carlos": ["Centro Histórico", "Av. Bolívar"] },
-  "Delta Amacuro": { "Tucupita": ["Centro"] },
-  "Distrito Capital": { "Caracas": ["Altamira", "Las Mercedes", "Chacao", "La Castellana", "Sabana Grande"] },
-  "Falcón": { "Punto Fijo": ["Zona Libre", "Judibana"], "Chichiriviche": ["Zona Embarcadero"] },
-  "Guárico": { "San Juan de los Morros": ["Centro", "Aguas Termales"] },
-  "Lara": { "Barquisimeto": ["Este / Nueva Segovia", "Centro", "Cabudare"] },
-  "Mérida": { "Mérida": ["Centro", "Av. Las Américas", "Chorros de Milla"] },
-  "Miranda": { "Los Teques": ["San Antonio"], "Higuerote": ["Carenero", "Puerto Francés"] },
-  "Monagas": { "Maturín": ["Tipuro", "Juanico"] },
-  "Nueva Esparta": { "Porlamar / Pampatar": ["Pampatar", "Costa Azul", "Playa el Agua"] },
-  "Portuguesa": { "Acarigua": ["Centro", "Llano Mall"], "Guanare": ["Centro"] },
-  "Sucre": { "Cumaná": ["San Luis", "Centro"] },
-  "Táchira": { "San Cristóbal": ["Barrio Obrero", "Pueblo Nuevo"] },
-  "Trujillo": { "Valera": ["La Puerta", "Centro"] },
-  "La Guaira": { "Catia La Mar": ["Aeropuerto", "Caraballeda"] },
-  "Yaracuy": { "San Felipe": ["Centro", "Independencia"] },
-  "Zulia": { "Maracaibo": ["Bella Vista", "5 de Julio", "El Milagro"] }
+  "Amazonas": { "Puerto Ayacucho": ["Centro", "Av. Orinoco", "Av. 23 de Enero"] },
+  "Anzoátegui": {
+    "Lechería": ["Av. Principal", "El Morro", "Cerro El Morro"],
+    "Puerto La Cruz": ["Paseo Colón", "Centro", "Av. Municipal"],
+    "Barcelona": ["Centro", "Nueva Barcelona"],
+    "El Tigre": ["Centro", "Av. España"]
+  },
+  "Apure": { "San Fernando de Apure": ["Centro", "Paseo Libertador", "Biruaca"] },
+  "Aragua": {
+    "Maracay": ["Las Delicias", "El Castaño", "Base Aragua", "La Soledad", "Centro", "San Jacinto"],
+    "Cagua": ["Centro", "Corinsa"],
+    "Turmero": ["Centro", "Intercomunal"]
+  },
+  "Barinas": { "Barinas": ["Alto Barinas", "Centro", "Av. Cuatricentenaria"] },
+  "Bolívar": {
+    "Puerto Ordaz": ["Alta Vista", "Unare", "Chilemex"],
+    "Ciudad Bolívar": ["Paseo Orinoco", "Casco Histórico"]
+  },
+  "Carabobo": {
+    "Valencia": ["Viñedo", "Prebo", "El Trigal", "Naguanagua", "Mañongo", "Zona Industrial", "Centro"],
+    "Puerto Cabello": ["Casco Histórico", "Quizandal", "Patanemo"],
+    "Guacara": ["Centro", "Ciudad Alianza"]
+  },
+  "Cojedes": {
+    "Tinaquillo": ["Centro", "Av. Miranda", "Zona Industrial", "Buenos Aires", "San Josecito"],
+    "San Carlos": ["Centro Histórico", "Av. Bolívar", "San Rafael"]
+  },
+  "Delta Amacuro": { "Tucupita": ["Centro", "Av. Manamo"] },
+  "Distrito Capital": {
+    "Caracas": ["Altamira", "Las Mercedes", "La Castellana", "Chacao", "Sabana Grande", "El Recreo", "Plaza Venezuela", "Capitolio"]
+  },
+  "Falcón": {
+    "Punto Fijo": ["Centro", "Zona Libre", "Judibana"],
+    "Coro": ["Casco Colonial", "Av. Independencia"],
+    "Chichiriviche": ["Centro", "Playa Sur", "Zona de Embarcaderos"]
+  },
+  "Guárico": { "San Juan de los Morros": ["Centro", "Aguas Termales"], "Calabozo": ["Centro Histórico"] },
+  "Lara": {
+    "Barquisimeto": ["Este / Nueva Segovia", "Centro", "Cabudare"],
+    "Carora": ["Centro Histórico"]
+  },
+  "Mérida": { "Mérida": ["Centro", "Av. Las Américas", "La Hechicera", "Chorros de Milla"] },
+  "Miranda": {
+    "Los Teques": ["Centro", "San Antonio de los Altos", "Carrizal"],
+    "Guarenas / Guatire": ["Nueva Casarapa", "Castillejo"],
+    "Higuerote": ["Centro", "Puerto Francés", "Carenero"]
+  },
+  "Monagas": { "Maturín": ["Tipuro", "Juanico", "Centro"] },
+  "Nueva Esparta": { "Porlamar / Pampatar": ["Pampatar", "Costa Azul", "Av. 4 de Mayo", "Playa el Agua"] },
+  "Portuguesa": { "Acarigua / Araure": ["Centro Acarigua", "Centro Araure", "Llano Mall"], "Guanare": ["Centro"] },
+  "Sucre": { "Cumaná": ["Centro", "San Luis"], "Carúpano": ["Centro"] },
+  "Táchira": { "San Cristóbal": ["Barrio Obrero", "Pueblo Nuevo", "Centro"], "San Antonio del Táchira": ["Centro"] },
+  "Trujillo": { "Valera": ["Centro", "Las Acacias", "La Puerta"], "Trujillo": ["Casco Central"] },
+  "La Guaira": { "Catia La Mar / Maiquetía": ["Zona Aeropuerto", "Caraballeda", "Catia La Mar"] },
+  "Yaracuy": { "San Felipe": ["Centro", "Av. Yaracuy", "Independencia"], "Yaritagua": ["Centro"] },
+  "Zulia": { "Maracaibo": ["Bella Vista", "5 de Julio", "El Milagro", "Santa Lucía"], "Cabimas": ["Centro"] }
 };
 
 const ADMIN_KEY = "Peterparker3";
@@ -33,16 +65,17 @@ const ADMIN_KEY = "Peterparker3";
 let inventarioHoteles = JSON.parse(localStorage.getItem('findbed_hoteles')) || [
   {
     id: 101,
-    nombre: "Hotel Carmesí Royal VIP",
+    nombre: "Hotel Carmesí Royal",
     categoria: "Hotel",
-    estado: "Carabobo",
-    ciudad: "Valencia",
-    zona: "Viñedo",
-    moneda: "EUR",
+    estado: "Distrito Capital",
+    ciudad: "Caracas",
+    zona: "Altamira",
+    moneda: "USD",
     precioOficial: 120,
     descuento: 15,
     anticipo: 25,
-    habs: 5,
+    habs: 4,
+    nivel: "Alta Gama",
     foto: "hotel1_piscina.jpg"
   },
   {
@@ -57,6 +90,7 @@ let inventarioHoteles = JSON.parse(localStorage.getItem('findbed_hoteles')) || [
     descuento: 0,
     anticipo: 4,
     habs: 8,
+    nivel: "Económica",
     foto: "hotel1_habitacion.jpg"
   }
 ];
@@ -65,173 +99,150 @@ let hotelSeleccionado = inventarioHoteles[0];
 let timerInterval = null;
 
 // ==========================================
-// 2. NAVEGACIÓN ENTRE LOS 7 PASOS
-// ==========================================
-function irAlPaso(paso) {
-  const pasos = [
-    "seccion-busqueda", "paso-3-detalle", "paso-4-habitacion", 
-    "paso-5-desglose", "paso-6-pago", "paso-7-recibo"
-  ];
-  
-  pasos.forEach(p => {
-    const el = document.getElementById(p);
-    if(el) el.style.display = "none";
-  });
-
-  if (paso === 1 || paso === 2) {
-    document.getElementById("seccion-busqueda").style.display = "block";
-  } else if (paso === 3) {
-    document.getElementById("paso-3-detalle").style.display = "block";
-  } else if (paso === 4) {
-    document.getElementById("paso-4-habitacion").style.display = "block";
-  } else if (paso === 5) {
-    actualizarDesglose();
-    document.getElementById("paso-5-desglose").style.display = "block";
-  } else if (paso === 6) {
-    document.getElementById("paso-6-pago").style.display = "block";
-    iniciarTemporizador(15 * 60);
-  } else if (paso === 7) {
-    document.getElementById("paso-7-recibo").style.display = "block";
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ==========================================
-// 3. DESPLEGABLES EN CASCADA
+// 2. CONEXIÓN DE EVENTOS AL CARGAR LA PÁGINA
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+  
+  // A. Llenar los desplegables de Ubicación manteniendo tus estilos[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
   const selectEstado = document.getElementById("select-estado");
   const selectCiudad = document.getElementById("select-ciudad");
   const selectZona = document.getElementById("select-zona");
 
   if (selectEstado) {
     selectEstado.innerHTML = '<option value="">Todos los Estados</option>';
-    Object.keys(locationsData).sort().forEach(est => {
-      const opt = document.createElement("option");
-      opt.value = est;
-      opt.textContent = est;
-      selectEstado.appendChild(opt);
+    Object.keys(locationsData).sort().forEach(estado => {
+      const option = document.createElement("option");
+      option.value = estado;
+      option.textContent = estado;
+      selectEstado.appendChild(option);
     });
 
     selectEstado.addEventListener("change", (e) => {
       const estSel = e.target.value;
-      selectCiudad.innerHTML = '<option value="">Todas las Ciudades</option>';
-      selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
-      selectZona.disabled = true;
+      if (selectCiudad) selectCiudad.innerHTML = '<option value="">Todas las Ciudades</option>';
+      if (selectZona) {
+        selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
+        selectZona.disabled = true;
+      }
 
-      if (estSel && locationsData[estSel]) {
+      if (estSel && locationsData[estSel] && selectCiudad) {
         selectCiudad.disabled = false;
-        Object.keys(locationsData[estSel]).sort().forEach(cd => {
-          const opt = document.createElement("option");
-          opt.value = cd;
-          opt.textContent = cd;
-          selectCiudad.appendChild(opt);
+        Object.keys(locationsData[estSel]).sort().forEach(ciudad => {
+          const option = document.createElement("option");
+          option.value = ciudad;
+          option.textContent = ciudad;
+          selectCiudad.appendChild(option);
         });
-      } else {
+      } else if (selectCiudad) {
         selectCiudad.disabled = true;
       }
       filtrarHospedajes();
     });
 
-    selectCiudad.addEventListener("change", (e) => {
-      const estSel = selectEstado.value;
-      const cdSel = e.target.value;
-      selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
+    if (selectCiudad) {
+      selectCiudad.addEventListener("change", (e) => {
+        const estSel = selectEstado.value;
+        const cdSel = e.target.value;
+        if (selectZona) selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
 
-      if (estSel && cdSel && locationsData[estSel][cdSel]) {
-        selectZona.disabled = false;
-        locationsData[estSel][cdSel].forEach(zn => {
-          const opt = document.createElement("option");
-          opt.value = zn;
-          opt.textContent = zn;
-          selectZona.appendChild(opt);
-        });
-      } else {
-        selectZona.disabled = true;
-      }
-      filtrarHospedajes();
-    });
+        if (estSel && cdSel && locationsData[estSel][cdSel] && selectZona) {
+          selectZona.disabled = false;
+          locationsData[estSel][cdSel].forEach(zona => {
+            const option = document.createElement("option");
+            option.value = zona;
+            option.textContent = zona;
+            selectZona.appendChild(option);
+          });
+        } else if (selectZona) {
+          selectZona.disabled = true;
+        }
+        filtrarHospedajes();
+      });
+    }
 
-    selectZona.addEventListener("change", filtrarHospedajes);
+    if (selectZona) selectZona.addEventListener("change", filtrarHospedajes);
   }
 
-  filtrarHospedajes();
+  // B. Hacer que el icono del candado responda[span_5](start_span)[span_5](end_span)
+  const candadoEl = document.querySelector(".btn-candado") || document.querySelector("[onclick*='abrirAdmin']") || document.querySelector("header button");
+  if (candadoEl) {
+    candadoEl.onclick = (e) => {
+      e.preventDefault();
+      abrirAdminPrompt();
+    };
+  }
 
-  // Procesar Formulario de Pago
-  document.getElementById("form-pago-movil").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const sim = hotelSeleccionado.moneda === 'EUR' ? '€' : '$';
-    const codigo = "CARMESI-" + Math.floor(100000 + Math.random() * 900000);
-    const cliente = document.getElementById("pago-nombre").value;
-
-    document.getElementById("reporte-codigo").textContent = codigo;
-    document.getElementById("reporte-cliente").textContent = cliente;
-    document.getElementById("reporte-hotel").textContent = hotelSeleccionado.nombre;
-    document.getElementById("reporte-monto-restante").textContent = `${sim}${hotelSeleccionado.precioOficial - hotelSeleccionado.descuento - hotelSeleccionado.anticipo}`;
-
-    if (timerInterval) clearInterval(timerInterval);
-    irAlPaso(7);
-  });
+  // C. Vincular todos los botones "Reservar Ahora 🏨[span_6](start_span)[span_7](start_span)"[span_6](end_span)[span_7](end_span)
+  asignarEventosReserva();
 });
 
 // ==========================================
-// 4. RENDERIZAR TARJETAS Y DETALLES
+// 3. FUNCIONES DE NAVEGACIÓN Y ACCIONES
 // ==========================================
-function filtrarHospedajes() {
-  const estVal = document.getElementById("select-estado").value;
-  const cdVal = document.getElementById("select-ciudad").value;
-  const znVal = document.getElementById("select-zona").value;
-  const contenedor = document.getElementById("lista-hoteles-cards");
 
-  const filtrados = inventarioHoteles.filter(h => {
-    const coincideEstado = !estVal || h.estado.toLowerCase() === estVal.toLowerCase();
-    const coincideCiudad = !cdVal || h.ciudad.toLowerCase() === cdVal.toLowerCase();
-    const coincideZona = !znVal || h.zona.toLowerCase() === znVal.toLowerCase();
-    return coincideEstado && coincideCiudad && coincideZona;
+function abrirAdminPrompt() {
+  const pass = prompt("🔑 Ingrese la clave de administrador:");
+  if (pass === ADMIN_KEY) {
+    const secAdmin = document.getElementById("seccion-admin");
+    if (secAdmin) {
+      secAdmin.style.display = "block";
+      window.scrollTo({ top: secAdmin.offsetTop, behavior: 'smooth' });
+    } else {
+      alert("✅ Clave de administrador correcta.");
+    }
+  } else if (pass !== null) {
+    alert("❌ Clave de administrador incorrecta.");
+  }
+}
+
+function irAlPaso(numeroPaso) {
+  const pasos = [
+    "seccion-busqueda", "paso-1-filtros", "paso-2-catalogo", 
+    "paso-3-detalle", "paso-4-habitacion", "paso-5-desglose", 
+    "paso-6-pago", "paso-7-recibo", "seccion-pago"
+  ];
+
+  pasos.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
   });
 
-  if (filtrados.length === 0) {
-    contenedor.innerHTML = `<p style="color: #aaa; text-align: center;">⚠️ No hay hospedajes en esta zona.</p>`;
-    return;
+  if (numeroPaso === 1 || numeroPaso === 2) {
+    if (document.getElementById("seccion-busqueda")) document.getElementById("seccion-busqueda").style.display = "block";
+  } else if (numeroPaso === 3) {
+    if (document.getElementById("paso-3-detalle")) document.getElementById("paso-3-detalle").style.display = "block";
+  } else if (numeroPaso === 4) {
+    if (document.getElementById("paso-4-habitacion")) document.getElementById("paso-4-habitacion").style.display = "block";
+  } else if (numeroPaso === 5) {
+    if (document.getElementById("paso-5-desglose")) document.getElementById("paso-5-desglose").style.display = "block";
+  } else if (numeroPaso === 6) {
+    if (document.getElementById("paso-6-pago")) document.getElementById("paso-6-pago").style.display = "block";
+    iniciarTemporizador(15 * 60);
+  } else if (numeroPaso === 7) {
+    if (document.getElementById("paso-7-recibo")) document.getElementById("paso-7-recibo").style.display = "block";
   }
 
-  contenedor.innerHTML = filtrados.map(h => {
-    const sim = h.moneda === 'EUR' ? '€' : '$';
-    return `
-      <div style="background: #250012; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #800020;">
-        <img src="${h.foto}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 6px;" onerror="this.src='https://via.placeholder.com/300x150?text=Hotel'">
-        <h4 style="color: white; margin: 8px 0 2px 0;">${h.nombre}</h4>
-        <p style="color: #aaa; font-size: 12px; margin: 0 0 8px 0;">📍 ${h.ciudad}, ${h.estado} (${h.zona})</p>
-        <p style="color: #00ff88; font-weight: bold; margin: 0 0 8px 0;">Oferta: ${sim}${h.precioOficial - h.descuento} / noche</p>
-        <button type="button" onclick="verDetalle(${h.id})" style="width: 100%; padding: 8px; background: #800020; border: none; color: white; border-radius: 4px; font-weight: bold; cursor: pointer;">Ver Detalles 🔍</button>
-      </div>
-    `;
-  }).join('');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function verDetalle(id) {
-  hotelSeleccionado = inventarioHoteles.find(h => h.id === id);
-  document.getElementById("det-nombre").textContent = hotelSeleccionado.nombre;
-  document.getElementById("det-direccion").textContent = `${hotelSeleccionado.ciudad}, ${hotelSeleccionado.estado} (${hotelSeleccionado.zona})`;
-  document.getElementById("det-imagen").src = hotelSeleccionado.foto;
-  irAlPaso(3);
+function asignarEventosReserva() {
+  // Captura cualquier botón "Reservar Ahora" en tus tarjetas originales[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)
+  const botonesReserva = document.querySelectorAll("button");
+  botonesReserva.forEach(btn => {
+    if (btn.textContent.includes("Reservar Ahora") || btn.textContent.includes("Buscar Disponibilidad")) {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        irAlPaso(3);
+      };
+    }
+  });
 }
 
-function actualizarDesglose() {
-  const sim = hotelSeleccionado.moneda === 'EUR' ? '€' : '$';
-  document.getElementById("monto-recepcion").textContent = `${sim}${hotelSeleccionado.precioOficial}`;
-  document.getElementById("monto-descuento").textContent = `-${sim}${hotelSeleccionado.descuento}`;
-  document.getElementById("monto-total").textContent = `${sim}${hotelSeleccionado.precioOficial - hotelSeleccionado.descuento}`;
-  document.getElementById("monto-abono").textContent = `${sim}${hotelSeleccionado.anticipo}`;
-  
-  document.getElementById("pago-hotel-nombre").textContent = hotelSeleccionado.nombre;
-  document.getElementById("pago-monto-anticipo").textContent = `${sim}${hotelSeleccionado.anticipo} (al cambio BCV)`;
+function filtrarHospedajes() {
+  // Permite filtrar si hay selector de estados[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
+  asignarEventosReserva();
 }
 
-// ==========================================
-// 5. TEMPORIZADOR Y CANDADO ADMIN 🔒
-// ==========================================
 function iniciarTemporizador(duracion) {
   let timer = duracion;
   if (timerInterval) clearInterval(timerInterval);
@@ -242,7 +253,8 @@ function iniciarTemporizador(duracion) {
     min = min < 10 ? "0" + min : min;
     seg = seg < 10 ? "0" + seg : seg;
 
-    document.getElementById("temporizador").textContent = min + ":" + seg;
+    const el = document.getElementById("temporizador");
+    if (el) el.textContent = min + ":" + seg;
 
     if (--timer < 0) {
       clearInterval(timerInterval);
@@ -251,18 +263,3 @@ function iniciarTemporizador(duracion) {
     }
   }, 1000);
 }
-
-function abrirAdminPrompt() {
-  const pass = prompt("🔑 Clave de Administrador:");
-  if (pass === ADMIN_KEY) {
-    document.getElementById("seccion-admin").style.display = "block";
-    window.scrollTo({ top: document.getElementById("seccion-admin").offsetTop, behavior: 'smooth' });
-  } else if (pass !== null) {
-    alert("❌ Clave incorrecta.");
-  }
-}
-
-function cerrarAdmin() {
-  document.getElementById("seccion-admin").style.display = "none";
-             }
-                
