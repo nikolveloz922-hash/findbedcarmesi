@@ -1,257 +1,235 @@
+ ==========================================
+   ESTILOS GENERALES Y VARIABLES (DARK THEME)
+   ========================================== */
+:root {
+  --bg-dark: #0f111a;
+  --card-bg: #1a1d2e;
+  --modal-bg: #161927;
+  --accent-carmesi: #e63946;
+  --accent-verde: #2ec4b6;
+  --text-main: #f1f1f1;
+  --text-muted: #a0a5b5;
+  --border-color: rgba(255, 255, 255, 0.08);
+}
 
-  * {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-  background-color: #0f0f11;
-  color: #f1f1f1;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
   padding-bottom: 40px;
 }
 
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+/* ENCABEZADO */
 .header {
-  background: linear-gradient(135deg, #8b0000, #e50914);
-  padding: 20px;
+  background-color: var(--card-bg);
+  padding: 15px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.header h1 {
-  font-size: 1.8rem;
-  color: #fff;
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.header p {
-  font-size: 0.9rem;
-  opacity: 0.9;
+.logo-box h1 {
+  font-size: 1.4rem;
+  color: var(--accent-carmesi);
 }
 
-.main-container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 15px;
+.btn-volver {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.sec-hoteles h2 {
+/* TARJETAS DE PASOS (ALINEACIÓN CON HTML DE 7 PASOS) */
+.card-paso, .card-filtros, .card-pago, .card-recibo {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.card-paso h2 {
+  font-size: 1.2rem;
   margin-bottom: 15px;
-  border-bottom: 2px solid #e50914;
-  display: inline-block;
+  color: var(--accent-carmesi);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.card-paso h3 {
+  font-size: 0.95rem;
+  margin: 12px 0 8px 0;
+  color: var(--text-muted);
+}
+
+/* BOTONES Y SELECCIONES */
+.grupo-botones {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
   padding-bottom: 5px;
 }
 
-.grid-hoteles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+.btn-tipo, .btn-categoria {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.card-hotel {
-  background: #1a1a1e;
-  border: 1px solid #2a2a30;
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+.btn-tipo.activo, .btn-categoria.activo {
+  background-color: var(--accent-carmesi);
+  border-color: var(--accent-carmesi);
+  font-weight: bold;
 }
 
-.img-hotel {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.card-body {
-  padding: 15px;
+.selects-box {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 10px;
 }
 
-.badges {
+.input-select, .input-text, input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-main);
+  outline: none;
+}
+
+/* CATÁLOGO Y TARJETAS DE HOTELES */
+.grid-hoteles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.card-hotel {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s;
+}
+
+.card-hotel:hover {
+  transform: translateY(-3px);
+}
+
+.img-detalle {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* DETALLES Y DESGLOSE FINANCIERO */
+.badge-24h {
+  font-size: 0.8rem;
+  color: var(--accent-verde);
+  margin: 8px 0;
+}
+
+.box-info {
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 0.9rem;
   display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-.badge-disp {
-  background: #00e676;
-  color: #000;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: bold;
-}
-
-.badge-cat {
-  background: #ff9100;
-  color: #000;
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-weight: bold;
-}
-
-.ubicacion-txt {
-  color: #aaa;
-  font-size: 0.88rem;
-}
-
-.detalles-habitacion {
-  background: #24242c;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-}
-
-.tag-hab {
-  display: inline-block;
-  background: #2b3a4a;
-  color: #00d2ff;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  margin: 2px;
-}
-
-.comodidades-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 6px;
-}
-
-.tag-comodidad {
-  background: rgba(0, 230, 118, 0.15);
-  color: #00e676;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-}
-
-.precios-box {
-  background: #121215;
-  padding: 10px;
-  border-radius: 8px;
-  border-left: 4px solid #e50914;
-}
-
-.precio-old {
-  text-decoration: line-through;
-  color: #777;
-  font-size: 0.85rem;
-}
-
-.precio-new {
-  color: #00e676;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
-.anticipo-txt {
-  color: #00d2ff;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-.restante-txt {
-  color: #ffb74d;
-  font-size: 0.85rem;
-}
-
-.btn-reservar {
-  background: #e50914;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 5px;
-}
-
-.btn-reservar:hover {
-  background: #b20710;
-}
-
-/* MODALES */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  z-index: 1000;
-  padding: 20px;
-}
-
-.modal-content {
-  background: #1a1a1e;
-  max-width: 450px;
-  margin: 50px auto;
-  padding: 20px;
-  border-radius: 12px;
-  position: relative;
-  border: 1px solid #333;
-}
-
-.cerrar {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.datos-pago-box {
-  background: #24242c;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 15px 0;
-  font-size: 0.9rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 15px;
-}
-
-.form-group input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #0f0f11;
-  color: #fff;
-  font-size: 1rem;
-}
-
-.btn-confirmar {
-  background: #00e676;
-  color: #000;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  width: 100%;
-  cursor: pointer;
-}
-
-.resumen-codigo {
-  background: #0f0f11;
+.desglose-resumen {
+  background-color: rgba(0, 0, 0, 0.3);
   padding: 15px;
   border-radius: 8px;
+  border-left: 4px solid var(--accent-carmesi);
   margin: 15px 0;
-  text-align: center;
 }
 
-.txt-nota {
-  font-size: 0.8rem;
-  color: #aaa;
+.desglose-resumen p {
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.campo {
+  margin-bottom: 12px;
+}
+
+.campo label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.btn-principal {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--accent-carmesi);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-mapa {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--accent-verde);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.alerta-warning {
+  background-color: rgba(255, 193, 7, 0.15);
+  border: 1px solid #ffc107;
+  color: #ffc107;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
   margin-bottom: 15px;
 }
+
+.txt-verde { color: var(--accent-verde); }
+.txt-subtitulo { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+
+ 
