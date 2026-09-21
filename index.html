@@ -3,64 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FindBedCarmesi - Reservas de Hoteles</title>
+  <title>FindBedCarmesi - Reservas de Hospedaje</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ENCABEZADO -->
+  <!-- ENCABEZADO Y NAVEGACIÓN -->
   <header class="header">
-    <div class="logo-container">
-      <h1>FindBedCarmesi 🏨</h1>
-      <p>Reserva tu habitación al mejor precio</p>
+    <div class="top-nav">
+      <button type="button" id="btn-volver" class="btn-volver" onclick="location.reload()">⬅️ Volver</button>
+      <div class="logo-box">
+        <img src="logo.png" alt="FindBedCarmesi Logo" class="app-logo" onerror="this.style.display='none'">
+        <h1>FindBedCarmesi</h1>
+      </div>
     </div>
   </header>
 
-  <!-- CONTENEDOR PRINCIPAL -->
-  <main class="main-container">
-    <section class="sec-hoteles">
-      <h2>Alojamientos Disponibles</h2>
-      <div id="lista-hoteles" class="grid-hoteles"></div>
+  <main class="container">
+
+    <!-- BANNER PUBLICITARIO (PINK WEATHER) -->
+    <div id="banner-publicitario"></div>
+
+    <!-- PASO 1: BÚSQUEDA Y FILTROS DE UBICACIÓN -->
+    <section id="paso-1-filtros" class="card-paso">
+      <h2>Paso 1: Selecciona la Ubicación</h2>
+      
+      <!-- Tipo de Hospedaje -->
+      <h3>Tipo de Hospedaje</h3>
+      <div class="grupo-botones">
+        <button type="button" class="btn-categoria activo" data-tipo="Hotel">Hoteles</button>
+        <button type="button" class="btn-categoria" data-tipo="Resort">Resorts</button>
+        <button type="button" class="btn-categoria" data-tipo="Motel">Moteles</button>
+      </div>
+
+      <!-- Menús Desplegables en Cascada -->
+      <h3>Ubicación</h3>
+      <div class="selects-box">
+        <label for="select-estado">Estado</label>
+        <select id="select-estado" class="input-select"></select>
+
+        <label for="select-ciudad">Ciudad</label>
+        <select id="select-ciudad" class="input-select" disabled></select>
+
+        <label for="select-zona">Zona</label>
+        <select id="select-zona" class="input-select" disabled></select>
+      </div>
+
+      <!-- Acceso a Administración -->
+      <div style="margin-top: 20px; text-align: center;">
+        <button type="button" class="btn-secundario" onclick="irAlPaso('admin-login')">🔐 Modo Administración</button>
+      </div>
     </section>
+
+    <!-- PASO 2: CATÁLOGO DE OPCIONES DISPONIBLES -->
+    <section id="paso-2-catalogo" class="card-paso" style="display: none;">
+      <h2>Paso 2: Opciones Disponibles</h2>
+      <div id="aviso-no-resultados" class="alerta-warning" style="display: none;">
+        ⚠️ No hay opciones disponibles en esta zona.
+      </div>
+      <div id="lista-hoteles-cards" class="grid-hoteles"></div>
+    </section>
+
+    <!-- PASO 3: DETALLE DEL HOSPEDAJE SELECCIONADO -->
+    <section id="paso-3-detalle" class="card-paso" style="display: none;">
+      <h2>Paso 3: Detalle del Hospedaje</h2>
+      <div class="detalle-box">
+        <img id="detalle-foto" src="" alt="Hotel" class="img-detalle" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;">
+        <h3 id="detalle-nombre"></h3>
+        <p id="detalle-ubicacion" class="txt-subtitulo"></p>
+        <div class="badge-24h">🟢 Abierto 24 Horas / Recepción Activa 24/7</div>
+        <p id="detalle-descripcion"></p>
+        <p id="detalle-precio" style="font-weight: bold; font-size: 1.1em;"></p>
+        
+        <button type="button" class="btn-principal" onclick="irAlPaso(4)">Continuar a Habitación ➡️</button>
+      </div>
+    </section>
+
+    <!-- PASO 4: SELECCIÓN DE HABITACIÓN Y CAPACIDAD -->
+    <section id="paso-4-habitacion" class="card-paso" style="display: none;">
+      <h2>Paso 4: Elige tu Habitación</h2>
+      <div class="box-info">
+        <label for="select-habitacion"><strong>Tipo de Habitación:</strong></label>
+        <select id="select-habitacion" class="input-select">
+          <option value="Sencilla (1 Persona)">Sencilla - 👤 Capacidad: 1 Persona</option>
+          <option value="Matrimonial (2 Personas)" selected>Matrimonial - 👥 Capacidad: 2 Personas</option>
+          <option value="Suite (VIP)">Suite VIP - 🌟 Mayor Confort</option>
+        </select>
+      </div>
+      <button type="button" class="btn-principal" onclick="irAlPaso(5)">Ver Cuentas Claras ➡️</button>
+    </section>
+
+    <!-- PASO 5: DESGLOSE DE TASA, DIVISA Y CUENTAS CLARAS -->
+    <section id="paso-5-desglose" class="card-paso" style="display: none;">
+      <h2>Paso 5: Cuentas Claras ℹ️</h2>
+      <div class="desglose-resumen">
+        <p><strong>Precio Oficial en Recepción:</strong> <span id="monto-recepcion"></span></p>
+        <p><strong>Descuento Exclusivo App:</strong> <span id="monto-descuento" class="txt-verde"></span></p>
+        <p><strong>Precio con Descuento:</strong> <span id="monto-total"></span></p>
+        <hr>
+        <p><strong>Monto Abono para Reserva (Pago Móvil):</strong> <span id="monto-abono"></span></p>
+      </div>
+      <button type="button" class="btn-principal" onclick="irAlPaso(6)">Ir al Pago Móvil 💳</button>
+    </section>
+
+    <!-- PASO 6: FORMULARIO DE PAGO MÓVIL Y DATOS DEL CLIENTE -->
+    <section id="paso-6-pago" class="card-paso" style="display: none;">
+      <h2>Paso 6: Registro de Pago Móvil 💳</h2>
+
+      <form id="form-pago-movil">
+        <div class="campo">
+          <label for="pago-nombre">Nombre y Apellido:</label>
+          <input type="text" id="pago-nombre" required placeholder="Ej: María Calderón">
+        </div>
+
+        <div class="campo">
+          <label for="pago-cedula">Cédula de Identidad:</label>
+          <input type="text" id="pago-cedula" required placeholder="Ej: 28123456">
+        </div>
+
+        <div class="campo">
+          <label for="pago-referencia">Número de Referencia:</label>
+          <input type="text" id="pago-referencia" required placeholder="Ej: 00123456">
+        </div>
+
+        <button type="submit" class="btn-principal">Procesar Reserva 🚀</button>
+      </form>
+    </section>
+
+    <!-- PASO 7: CONFIRMACIÓN, CÓDIGO ÚNICO Y RECIBO FINAL -->
+    <section id="paso-7-recibo" class="card-paso" style="display: none;">
+      <h2>Paso 7: ¡Reserva Confirmada Exitosamente! 🎉</h2>
+      <div class="box-info">
+        <p>🔑 <strong>Código Único:</strong> <span id="reporte-codigo"></span></p>
+        <p>👤 <strong>Cliente:</strong> <span id="reporte-cliente"></span></p>
+        <p>🏨 <strong>Hospedaje:</strong> <span id="reporte-hotel"></span></p>
+        <p>💵 <strong>Restante a pagar en recepción:</strong> <span id="reporte-monto-restante"></span></p>
+      </div>
+      <p class="txt-subtitulo">Presenta este código al momento de realizar tu Check-in.</p>
+    </section>
+
+    <!-- MÓDULO ADMINISTRACIÓN: LOGIN -->
+    <section id="paso-admin-login" class="card-paso" style="display: none;">
+      <h2>Acceso Administrativo 🔑</h2>
+      <div class="campo">
+        <label for="input-admin-pass">Contraseña de Administrador:</label>
+        <input type="password" id="input-admin-pass" class="input-select" placeholder="Ingresa la clave">
+      </div>
+      <button type="button" class="btn-principal" onclick="autenticarAdmin()">Ingresar Panel 🔓</button>
+      <button type="button" class="btn-secundario" onclick="irAlPaso(1)" style="margin-top:10px;">Volver</button>
+    </section>
+
+    <!-- MÓDULO ADMINISTRACIÓN: PANEL -->
+    <section id="paso-admin-panel" class="card-paso" style="display: none;">
+      <h2>Panel de Gestión de Anuncios y Hospedajes ⚙️</h2>
+
+      <h3>Publicar Nuevo Hospedaje</h3>
+      <form id="form-admin-hotel">
+        <div class="campo">
+          <label for="admin-nombre">Nombre del Hospedaje:</label>
+          <input type="text" id="admin-nombre" class="input-select" required placeholder="Ej: Hotel Carmesí Royal">
+        </div>
+
+        <div class="campo">
+          <label for="admin-categoria">Categoría:</label>
+          <select id="admin-categoria" class="input-select">
+            <option value="Hotel">Hotel</option>
+            <option value="Resort">Resort</option>
+            <option value="Motel">Motel</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="admin-estado">Estado:</label>
+          <input type="text" id="admin-estado" class="input-select" required placeholder="Ej: Carabobo">
+        </div>
+
+        <div class="campo">
+          <label for="admin-ciudad">Ciudad:</label>
+          <input type="text" id="admin-ciudad" class="input-select" required placeholder="Ej: Valencia">
+        </div>
+
+        <div class="campo">
+          <label for="admin-zona">Zona:</label>
+          <input type="text" id="admin-zona" class="input-select" required placeholder="Ej: Viñedo">
+        </div>
+
+        <div class="campo">
+          <label for="admin-moneda">Moneda:</label>
+          <select id="admin-moneda" class="input-select">
+            <option value="EUR">Euro (€)</option>
+            <option value="USD">Dólar ($)</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="admin-precio-rec">Precio Recepción:</label>
+          <input type="number" id="admin-precio-rec" class="input-select" step="0.01" required placeholder="Ej: 120">
+        </div>
+
+        <div class="campo">
+          <label for="admin-descuento">Descuento App:</label>
+          <input type="number" id="admin-descuento" class="input-select" step="0.01" required placeholder="Ej: 15">
+        </div>
+
+        <div class="campo">
+          <label for="admin-abono">Abono (Pago Móvil):</label>
+          <input type="number" id="admin-abono" class="input-select" step="0.01" required placeholder="Ej: 25">
+        </div>
+
+        <div class="campo">
+          <label for="admin-foto">Nombre de la Imagen Principal:</label>
+          <input type="text" id="admin-foto" class="input-select" placeholder="Ej: hotel1_piscina.jpg">
+        </div>
+
+        <div class="campo">
+          <label for="admin-descripcion">Descripción / Características:</label>
+          <textarea id="admin-descripcion" class="input-select" rows="3" placeholder="Descripción breve..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-principal">Guardar y Publicar Hospedaje 💾</button>
+      </form>
+
+      <hr style="margin: 20px 0;">
+
+      <h3>Hospedajes Registrados</h3>
+      <div id="admin-lista-hoteles"></div>
+
+      <button type="button" class="btn-secundario" onclick="irAlPaso(1)" style="margin-top:15px;">Salir del Panel</button>
+    </section>
+
   </main>
 
-  <!-- MODAL DE PAGO MÓVIL -->
-  <div id="modal-pago" class="modal">
-    <div class="modal-content">
-      <span class="cerrar" onclick="cerrarModal('modal-pago')">&times;</span>
-      <h3>Registrar Pago Móvil 💳</h3>
-      <p class="txt-instrucciones">Realiza el pago del anticipo y coloca aquí el número de referencia:</p>
-      
-      <div class="datos-pago-box">
-        <p><strong>Banco:</strong> Banesco / Banco de Venezuela</p>
-        <p><strong>Cédula / RIF:</strong> V-00000000</p>
-        <p><strong>Teléfono:</strong> 0412-0000000</p>
-      </div>
-
-      <form onsubmit="procesarPago(event)">
-        <div class="form-group">
-          <label for="num-referencia">Número de Referencia (Últimos 4 u 8 dígitos):</label>
-          <input type="number" id="num-referencia" required placeholder="Ej: 849201">
-        </div>
-        <button type="submit" class="btn-confirmar">Confirmar Pago y Reservar</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL COMPROBANTE AL USUARIO -->
-  <div id="modal-comprobante" class="modal">
-    <div class="modal-content modal-exito">
-      <h3>¡Reserva Registrada con Éxito! 🎉</h3>
-      <p>Hemos recibido tu reporte de Pago Móvil.</p>
-      <div class="resumen-codigo">
-        <p>Código de Confirmación: <strong id="codigo-reserva-txt">----</strong></p>
-        <p>N° Referencia: <strong id="ref-recibida-txt">----</strong></p>
-      </div>
-      <p class="txt-nota">Tu reserva está en proceso de validación. Presenta este código en la recepción del hotel al llegar.</p>
-      <button class="btn-confirmar" onclick="cerrarModal('modal-comprobante')">Entendido</button>
-    </div>
-  </div>
-
+  <!-- LÓGICA GENERAL DE LA APP -->
   <script src="script.js"></script>
 </body>
 </html>
+
+        
