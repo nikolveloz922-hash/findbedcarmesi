@@ -1,148 +1,110 @@
-<!DOCTYPE html>
+frontend/index.html
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FindBedCarmesi - Reservas de Hospedaje</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12070a">
+<title>FindBed Carmesí</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- ENCABEZADO -->
-  <header class="header" style="background: #1a000d; padding: 15px; text-align: center; border-bottom: 2px solid #800020;">
-    <div style="display: flex; justify: space-between; align-items: center; max-width: 500px; margin: 0 auto;">
-      <button type="button" class="btn-candado" onclick="abrirAdminPrompt()" style="background: transparent; border: none; font-size: 24px; cursor: pointer;">🔒</button>
-      <h1 style="color: #ff4d6d; margin: 0; font-size: 20px;">FindBedCarmesi</h1>
-      <span style="color: #aaa; font-size: 12px;">📜 Guía</span>
-    </div>
-  </header>
-
-  <main style="max-width: 500px; margin: 0 auto; padding: 15px;">
-
-    <!-- PASO 1 Y 2: BÚSQUEDA Y SELECCIÓN DE ESTADOS/ZONAS -->
-    <div id="seccion-busqueda">
-      <div id="paso-1-filtros" class="card-paso" style="background: #250012; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-        <h3 style="color: #ff4d6d; margin-top: 0;">Paso 1: Tipo de Hospedaje</h3>
-        
-        <label style="color: #ccc; font-size: 14px;">Selecciona Ubicación (23 Estados)</label>
-        <div style="margin: 10px 0;">
-          <select id="select-estado" style="width: 100%; padding: 10px; border-radius: 5px; background: #1a000d; color: white; border: 1px solid #800020; margin-bottom: 8px;">
-            <option value="">Cargando Estados...</option>
-          </select>
-
-          <select id="select-ciudad" style="width: 100%; padding: 10px; border-radius: 5px; background: #1a000d; color: white; border: 1px solid #800020; margin-bottom: 8px;" disabled>
-            <option value="">Todas las Ciudades</option>
-          </select>
-
-          <select id="select-zona" style="width: 100%; padding: 10px; border-radius: 5px; background: #1a000d; color: white; border: 1px solid #800020;" disabled>
-            <option value="">Todas las Zonas</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- PASO 2: CATÁLOGO DE RESULTADOS -->
-      <div id="paso-2-catalogo">
-        <h3 style="color: #ff4d6d;">Paso 2: Opciones Disponibles</h3>
-        <div id="lista-hoteles-cards"></div>
-      </div>
-
-      <!-- PUBLICIDAD DESTACADA -->
-      <div style="margin-top: 20px; text-align: center; background: #250012; padding: 10px; border-radius: 10px;">
-        <p style="color: #aaa; font-size: 12px; margin-bottom: 5px;">📣 Publicidad Destacada</p>
-        <img src="Anuncio-PinkWhather.jpg" alt="Pink Weather" style="width: 100%; border-radius: 8px; max-height: 150px; object-fit: cover;" onerror="this.style.display='none'">
-      </div>
-    </div>
-
-    <!-- PASO 3: DETALLE DEL HOTEL -->
-    <div id="paso-3-detalle" style="display: none; background: #250012; padding: 15px; border-radius: 10px;">
-      <h3 style="color: #ff4d6d; margin-top: 0;">Paso 3: Detalle del Hospedaje</h3>
-      <h2 id="det-nombre" style="color: white; margin: 5px 0;">--</h2>
-      <p id="det-direccion" style="color: #aaa; font-size: 13px;">--</p>
-      <img id="det-imagen" src="" style="width: 100%; border-radius: 8px; height: 180px; object-fit: cover; margin: 10px 0;">
-      <button type="button" onclick="irAlPaso(4)" style="width: 100%; padding: 12px; background: #00c853; border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer;">Continuar a Selección de Habitaciones ➡️</button>
-      <button type="button" onclick="irAlPaso(1)" style="width: 100%; padding: 10px; background: transparent; border: 1px solid #800020; color: #ccc; border-radius: 6px; margin-top: 8px; cursor: pointer;">Volver</button>
-    </div>
-
-    <!-- PASO 4: SELECCIÓN DE HABITACIÓN -->
-    <div id="paso-4-habitacion" style="display: none; background: #250012; padding: 15px; border-radius: 10px;">
-      <h3 style="color: #ff4d6d; margin-top: 0;">Paso 4: Tipo de Habitacion</h3>
-      <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-        <p style="color: white; margin: 0;">🛏️ Suite Ejecutiva VIP / Matrimonial</p>
-        <p style="color: #00ff88; font-size: 12px; margin: 5px 0 0 0;">Incluye Baño Privado, Aire Acondicionado y TV</p>
-      </div>
-      <button type="button" onclick="irAlPaso(5)" style="width: 100%; padding: 12px; background: #00c853; border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer;">Ver Desglose de Precios ➡️</button>
-      <button type="button" onclick="irAlPaso(3)" style="width: 100%; padding: 10px; background: transparent; border: 1px solid #800020; color: #ccc; border-radius: 6px; margin-top: 8px; cursor: pointer;">Volver</button>
-    </div>
-
-    <!-- PASO 5: DESGLOSE DE PRECIOS -->
-    <div id="paso-5-desglose" style="display: none; background: #250012; padding: 15px; border-radius: 10px;">
-      <h3 style="color: #ff4d6d; margin-top: 0;">Paso 5: Desglose de Tarifas</h3>
-      <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-bottom: 15px; color: white;">
-        <p style="display: flex; justify-content: space-between; margin: 5px 0;"><span>Precio Recepción:</span> <strong id="monto-recepcion">--</strong></p>
-        <p style="display: flex; justify-content: space-between; margin: 5px 0; color: #ff4d6d;"><span>Descuento App:</span> <strong id="monto-descuento">--</strong></p>
-        <hr style="border-color: #800020;">
-        <p style="display: flex; justify-content: space-between; margin: 5px 0; color: #00ff88;"><span>Total Oferta:</span> <strong id="monto-total">--</strong></p>
-        <p style="display: flex; justify-content: space-between; margin: 5px 0; color: #ffd54f; font-size: 13px;"><span>Anticipo Reserva:</span> <strong id="monto-abono">--</strong></p>
-      </div>
-      <button type="button" onclick="irAlPaso(6)" style="width: 100%; padding: 12px; background: #00c853; border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer;">Proceder al Pago Móvil 💳</button>
-      <button type="button" onclick="irAlPaso(4)" style="width: 100%; padding: 10px; background: transparent; border: 1px solid #800020; color: #ccc; border-radius: 6px; margin-top: 8px; cursor: pointer;">Volver</button>
-    </div>
-
-    <!-- PASO 6: DATOS DE PAGO Y TEMPORIZADOR -->
-    <div id="paso-6-pago" style="display: none; background: #250012; padding: 15px; border-radius: 10px;">
-      <h3 style="color: #00d2ff; text-align: center; margin-top: 0;">Paso 6: Pago Móvil 💳</h3>
-      <p style="text-align: center; color: white; font-size: 14px;">Reservando en: <strong id="pago-hotel-nombre">--</strong></p>
-
-      <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; margin: 12px 0; color: white; font-size: 13px;">
-        <p style="margin: 3px 0;"><strong>Banco:</strong> 0102 - Banco de Venezuela</p>
-        <p style="margin: 3px 0;"><strong>Cédula:</strong> 30585882</p>
-        <p style="margin: 3px 0;"><strong>Teléfono:</strong> 0412-1234567</p>
-        <p style="color: #00ff88; font-size: 14px; font-weight: bold; margin-top: 8px;">
-          Monto Anticipo: <span id="pago-monto-anticipo">--</span>
-        </p>
-      </div>
-
-      <div style="text-align: center; margin: 10px 0;">
-        <p style="font-size: 12px; color: #aaa; margin: 0;">Tiempo límite para transferir:</p>
-        <span id="temporizador" style="font-size: 22px; color: #ff4d4d; font-weight: bold;">15:00</span>
-      </div>
-
-      <form id="form-pago-movil">
-        <input type="text" id="pago-nombre" placeholder="Tu Nombre Completo" style="width: 100%; padding: 10px; border-radius: 5px; background: #1a000d; color: white; border: 1px solid #800020; margin-bottom: 8px;" required>
-        <input type="text" id="pago-referencia" placeholder="N° de Referencia Bancaria" style="width: 100%; padding: 10px; border-radius: 5px; background: #1a000d; color: white; border: 1px solid #800020; margin-bottom: 12px;" required>
-
-        <button type="submit" style="width: 100%; padding: 12px; background: #00c853; border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer;">Confirmar Pago y Obtener Código 🔑</button>
-      </form>
-    </div>
-
-    <!-- PASO 7: COMPROBANTE / RECIBO FINAL -->
-    <div id="paso-7-recibo" style="display: none; background: #250012; padding: 20px; border-radius: 10px; text-align: center; color: white;">
-      <h2 style="color: #00ff88; margin-top: 0;">¡Reserva Confirmada! 🎉</h2>
-      <p style="font-size: 14px; color: #aaa;">Muestra este código en recepción al llegar:</p>
-      
-      <div style="background: #1a000d; border: 2px dashed #00ff88; padding: 15px; border-radius: 8px; margin: 15px 0;">
-        <span id="reporte-codigo" style="font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #ffd54f;">CARMESI-000000</span>
-      </div>
-
-      <div style="text-align: left; font-size: 13px; color: #ddd; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
-        <p style="margin: 4px 0;"><strong>Huésped:</strong> <span id="reporte-cliente">--</span></p>
-        <p style="margin: 4px 0;"><strong>Hospedaje:</strong> <span id="reporte-hotel">--</span></p>
-        <p style="margin: 4px 0;"><strong>Monto pendiente en Check-in:</strong> <span id="reporte-monto-restante" style="color: #00ff88;">--</span></p>
-      </div>
-
-      <button type="button" onclick="irAlPaso(1)" style="width: 100%; padding: 12px; background: #800020; border: none; color: white; border-radius: 6px; font-weight: bold; margin-top: 15px; cursor: pointer;">Volver al Inicio 🏠</button>
-    </div>
-
-    <!-- PANEL DE ADMINISTRACIÓN INCRUSTADO -->
-    <div id="seccion-admin" style="display: none; background: #250012; padding: 15px; border-radius: 10px; margin-top: 15px; border: 1px solid #ff4d6d;">
-      <h3 style="color: #ff4d6d; margin-top: 0;">Panel Administrator ⚙️</h3>
-      <p style="color: #ccc; font-size: 12px;">Sesión iniciada con éxito.</p>
-      <button type="button" onclick="cerrarAdmin()" style="width: 100%; padding: 8px; background: transparent; border: 1px solid #800020; color: white; border-radius: 5px;">Cerrar Panel</button>
-    </div>
-
-  </main>
-
-  <script src="script.js"></script>
-</body>
-                                                                   </html>
-  
+<header class="top"><div class="brand">FIND<span>BED</span> <small>CARMESÍ</small></div><button id="adminBtn" class="ghost">■</button></header>
+<main>
+<section id="welcome" class="screen active">
+ <div class="hero"><div class="panda">■</div><h1>FindBed Carmesí</h1><p>Encuentra tu alojamiento rápido, fácil y desde tu teléfono.</p><button id="startBtn" class=
+</section>
+<section id="search" class="screen">
+ <div class="ad" id="adBox">■ Publicidad destacada</div>
+ <h2>¿Dónde quieres hospedarte?</h2>
+ <div class="chips">
+ <button class="chip active" data-cat="Hotel">■ Hoteles</button>
+ <button class="chip" data-cat="Resort">■■ Resorts</button>
+ <button class="chip" data-cat="Motel">■■ Moteles</button>
+ </div>
+ <div class="grid">
+ <label>Estado<select id="estado"><option value="">Todos</option></select></label>
+ <label>Ciudad<select id="ciudad"><option value="">Todas</option></select></label>
+ <label>Zona<select id="zona"><option value="">Todas</option></select></label>
+ </div>
+ <button id="searchBtn" class="primary">■ Buscar disponibilidad</button>
+ <div id="hotels" class="cards"></div>
+</section>
+<section id="detail" class="screen">
+ <button class="back" data-back="search"> Volver</button>
+ <img id="hotelImg" class="cover" alt="">
+ <div class="panel">
+ <span id="hotelCat" class="badge"></span><h2 id="hotelName"></h2>
+ <p id="hotelLocation"></p><p id="hotelDesc"></p>
+ <div id="hotelGallery" class="gallery"></div>
+ </div>
+ <div id="rooms" class="panel"></div>
+</section>
+<section id="booking" class="screen">
+ <button class="back" data-back="detail"> Hotel</button>
+ <div class="panel">
+ <h2>Tu reserva</h2>
+ <div id="bookingSummary"></div>
+ <div class="grid">
+ <label>Entrada<input type="date" id="checkin"></label>
+ <label>Salida<input type="date" id="checkout"></label>
+ <label>Huéspedes<input type="number" id="guests" min="1" max="20" value="2"></label>
+ </div>
+ <div class="total"><span>Total FindBed</span><strong id="total">$0</strong></div>
+ <button id="reserveBtn" class="primary">Continuar al pago</button>
+ </div>
+</section>
+<section id="payment" class="screen">
+ <div class="panel">
+ <div class="timer">■■ Reserva temporal: <strong id="timer">15:00</strong></div>
+ <h2>Pago rápido</h2>
+ <p id="payInfo"></p>
+ <div class="bank">
+ <b>Datos de Pago Móvil</b>
+ <div id="bankData">Configura los datos desde el administrador.</div>
+ </div>
+ <label>Nombre<input id="name" autocomplete="name"></label>
+ <label>Cédula<input id="cedula" inputmode="numeric"></label>
+ <label>Teléfono<input id="phone" inputmode="tel"></label>
+ <label>Referencia del Pago Móvil<input id="reference" inputmode="numeric"></label>
+ <label>Comprobante<input id="proof" type="file" accept="image/*"></label>
+ <button id="payBtn" class="primary">■ Comprobar y obtener código</button>
+ <p id="payStatus" class="status"></p>
+ </div>
+</section>
+<section id="confirmed" class="screen">
+ <div class="success">
+ <div class="check">✓</div><h1>¡Reserva confirmada!</h1>
+ <p>Tu código de reserva es:</p><div id="code" class="code"></div>
+ <div id="receipt"></div>
+ <button id="newBtn" class="primary">Nueva búsqueda</button>
+ </div>
+</section>
+<section id="adminLogin" class="screen">
+ <div class="panel"><h2>■ Administrador</h2>
+ <label>Contraseña<input id="adminPass" type="password"></label>
+ <button id="loginBtn" class="primary">Entrar</button><p id="loginStatus" class="status"></p>
+ </div>
+</section>
+<section id="admin" class="screen">
+ <div class="panel"><h2>Panel FindBed</h2>
+ <p>Solo tú administras hoteles y reservas.</p>
+ <div id="adminHotels"></div>
+ <hr>
+ <h3>Agregar hotel</h3>
+ <div class="grid">
+ <label>Nombre<input id="aName"></label>
+ <label>Categoría<select id="aCat"><option>Hotel</option><option>Resort</option><option>Motel</option></select></label>
+ <label>Estado<input id="aState"></label><label>Ciudad<input id="aCity"></label><label>Zona<input id="aZone"></label>
+ <label>Precio normal USD<input id="aNormal" type="number"></label><label>Precio FindBed USD<input id="aFindbed" type="number"></label>
+ <label>Abono USD<input id="aDeposit" type="number"></label><label>Habitaciones<input id="aRooms" type="number" value="4"></label>
+ <label>Foto URL<input id="aPhoto"></label>
+ </div>
+ <button id="addHotelBtn" class="primary">Guardar hotel</button>
+ <button id="logoutBtn" class="ghost">Cerrar sesión</button>
+   </div>
+</section>
+</main>
+<script src="app.js"></script>
+</body></html> 
+ 
