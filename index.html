@@ -91,3 +91,33 @@ index.html
  <label>Categoría<select id="h-cat"><option>Hotel</option><option>Resort</option><option>Motel</option></select></label>
  <label>Estado<input id="h-state" required></label>
  <label>Ciudad<input id="h-city" required></label>
+   <label>Zona<input id="h-zone" required></label>
+ <label>Nivel<input id="h-level" value="Alta Gama"></label>
+ <label>Precio normal USD<input id="h-normal" type="number" min="0" step=".01" required></label>
+ <label>Precio FindBed USD<input id="h-price" type="number" min="0" step=".01" required></label>
+ <label>Abono USD<input id="h-deposit" type="number" min="0" step=".01" required></label>
+ <label>Habitaciones disponibles<input id="h-rooms" type="number" min="0" value="4" required></label>
+ <label>Descripción<textarea id="h-desc"></textarea></label>
+ <label>Foto URL<input id="h-photo" placeholder="https://..."></label>
+ <button class="primary">Guardar hotel</button>
+ </form>
+ <div id="admin-hotels"></div>
+ </div>
+</section>
+</main>
+<nav id="drawer" class="drawer hidden">
+ <button id="close-drawer">×</button>
+ <button id="open-admin">■ Administración</button>
+ <button id="open-guide">■ Guía FindBed</button>
+</nav>
+<div id="guide" class="modal hidden">
+ <div class="modal-card">
+ <button id="close-guide">×</button><div class="panda big">■</div>
+ <h2>Hola, soy FindBed Carmesí</h2>
+ <p>Te guío para buscar, elegir una habitación y enviar tu comprobante.</p>
+ <button id="guide-ok" class="primary">Entendido</button>
+ </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
