@@ -1,110 +1,93 @@
-frontend/index.html
+index.html
 <!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#12070a">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090909">
 <title>FindBed Carmesí</title>
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top"><div class="brand">FIND<span>BED</span> <small>CARMESÍ</small></div><button id="adminBtn" class="ghost">■</button></header>
+<header class="topbar">
+ <div class="brand"><span class="logo-dot">◆</span><div><b>FindBed</b><small>Carmesí</small></div></div>
+ <button id="btn-menu" class="icon-btn">■</button>
+</header>
+<div id="ad" class="ad hidden"></div>
 <main>
-<section id="welcome" class="screen active">
- <div class="hero"><div class="panda">■</div><h1>FindBed Carmesí</h1><p>Encuentra tu alojamiento rápido, fácil y desde tu teléfono.</p><button id="startBtn" class=
-</section>
-<section id="search" class="screen">
- <div class="ad" id="adBox">■ Publicidad destacada</div>
- <h2>¿Dónde quieres hospedarte?</h2>
- <div class="chips">
- <button class="chip active" data-cat="Hotel">■ Hoteles</button>
- <button class="chip" data-cat="Resort">■■ Resorts</button>
- <button class="chip" data-cat="Motel">■■ Moteles</button>
+<section id="step-welcome" class="step active">
+ <div class="hero">
+ <div class="hero-copy">
+ <span class="eyebrow">ALOJAMIENTO • RESERVAS</span>
+ <h1>Encuentra tu lugar.<br><em>Reserva con Carmesí.</em></h1>
+ <p>Hoteles, resorts y moteles con precios promocionales y reserva sencilla.</p>
+ <button id="btn-explore" class="primary">Explorar alojamientos </button>
  </div>
- <div class="grid">
+ <div class="panda">■</div>
+ </div>
+</section>
+<section id="step-search" class="step">
+ <div class="section-title"><span>01</span><h2>Buscar disponibilidad</h2></div>
+ <div class="categories">
+ <button data-cat="Hotel" class="cat active">■ Hotel</button>
+ <button data-cat="Resort" class="cat">■ Resort</button>
+ <button data-cat="Motel" class="cat">■■ Motel</button>
+ </div>
+ <div class="filters">
  <label>Estado<select id="estado"><option value="">Todos</option></select></label>
  <label>Ciudad<select id="ciudad"><option value="">Todas</option></select></label>
  <label>Zona<select id="zona"><option value="">Todas</option></select></label>
+ <label>Entrada<input id="checkin" type="date"></label>
+ <label>Salida<input id="checkout" type="date"></label>
+ <label>Huéspedes<input id="guests" type="number" min="1" max="12" value="2"></label>
  </div>
- <button id="searchBtn" class="primary">■ Buscar disponibilidad</button>
- <div id="hotels" class="cards"></div>
+ <button id="btn-search" class="primary wide">Buscar disponibilidad ■</button>
+ <div id="hotel-list" class="grid"></div>
 </section>
-<section id="detail" class="screen">
- <button class="back" data-back="search"> Volver</button>
- <img id="hotelImg" class="cover" alt="">
- <div class="panel">
- <span id="hotelCat" class="badge"></span><h2 id="hotelName"></h2>
- <p id="hotelLocation"></p><p id="hotelDesc"></p>
- <div id="hotelGallery" class="gallery"></div>
- </div>
- <div id="rooms" class="panel"></div>
+<section id="step-detail" class="step">
+ <button class="back" data-back="step-search"> Volver</button>
+ <div id="detail"></div>
 </section>
-<section id="booking" class="screen">
- <button class="back" data-back="detail"> Hotel</button>
- <div class="panel">
- <h2>Tu reserva</h2>
- <div id="bookingSummary"></div>
- <div class="grid">
- <label>Entrada<input type="date" id="checkin"></label>
- <label>Salida<input type="date" id="checkout"></label>
- <label>Huéspedes<input type="number" id="guests" min="1" max="20" value="2"></label>
- </div>
- <div class="total"><span>Total FindBed</span><strong id="total">$0</strong></div>
- <button id="reserveBtn" class="primary">Continuar al pago</button>
- </div>
+<section id="step-room" class="step">
+ <button class="back" data-back="step-detail"> Hotel</button>
+ <div class="section-title"><span>03</span><h2>Habitación</h2></div>
+ <div id="room-list"></div>
+ <button id="btn-room" class="primary wide">Continuar </button>
 </section>
-<section id="payment" class="screen">
- <div class="panel">
- <div class="timer">■■ Reserva temporal: <strong id="timer">15:00</strong></div>
- <h2>Pago rápido</h2>
- <p id="payInfo"></p>
- <div class="bank">
- <b>Datos de Pago Móvil</b>
- <div id="bankData">Configura los datos desde el administrador.</div>
- </div>
- <label>Nombre<input id="name" autocomplete="name"></label>
- <label>Cédula<input id="cedula" inputmode="numeric"></label>
- <label>Teléfono<input id="phone" inputmode="tel"></label>
- <label>Referencia del Pago Móvil<input id="reference" inputmode="numeric"></label>
- <label>Comprobante<input id="proof" type="file" accept="image/*"></label>
- <button id="payBtn" class="primary">■ Comprobar y obtener código</button>
- <p id="payStatus" class="status"></p>
- </div>
+<section id="step-payment" class="step">
+ <button class="back" data-back="step-room"> Habitación</button>
+ <div class="section-title"><span>04</span><h2>Datos y pago</h2></div>
+ <div id="timer" class="timer">15:00</div>
+ <div id="summary" class="summary"></div>
+ <form id="payment-form" class="card">
+ <label>Nombre completo<input id="pay-name" required></label>
+ <label>Cédula / ID<input id="pay-id" required></label>
+ <label>Teléfono<input id="pay-phone" required></label>
+ <label>Referencia de Pago Móvil<input id="pay-ref" required></label>
+ <label>Comprobante<input id="pay-file" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+ <button class="primary wide" type="submit">Enviar comprobante ■</button>
+ <p id="pay-status" class="status"></p>
+ </form>
 </section>
-<section id="confirmed" class="screen">
- <div class="success">
- <div class="check">✓</div><h1>¡Reserva confirmada!</h1>
- <p>Tu código de reserva es:</p><div id="code" class="code"></div>
- <div id="receipt"></div>
- <button id="newBtn" class="primary">Nueva búsqueda</button>
- </div>
+<section id="step-result" class="step">
+ <div class="result-icon">✓</div>
+ <h2>Comprobante recibido</h2>
+ <p>Tu comprobante fue recibido y analizado. Esto <b>no constituye confirmación bancaria</b> hasta verificar el pago mediante una fuente de pago verifica <div id="result-card" class="card"></div>
+ <button id="btn-home" class="primary wide">Volver al inicio</button>
 </section>
-<section id="adminLogin" class="screen">
- <div class="panel"><h2>■ Administrador</h2>
- <label>Contraseña<input id="adminPass" type="password"></label>
- <button id="loginBtn" class="primary">Entrar</button><p id="loginStatus" class="status"></p>
+<section id="step-admin" class="step">
+ <button class="back" data-back="step-search"> Volver</button>
+ <div class="section-title"><span>ADM</span><h2>Administración</h2></div>
+ <div id="admin-login" class="card">
+ <label>Contraseña<input id="admin-pass" type="password"></label>
+ <button id="admin-login-btn" class="primary">Entrar</button>
  </div>
-</section>
-<section id="admin" class="screen">
- <div class="panel"><h2>Panel FindBed</h2>
- <p>Solo tú administras hoteles y reservas.</p>
- <div id="adminHotels"></div>
- <hr>
+ <div id="admin-panel" class="hidden">
+ <form id="hotel-form" class="card">
  <h3>Agregar hotel</h3>
- <div class="grid">
- <label>Nombre<input id="aName"></label>
- <label>Categoría<select id="aCat"><option>Hotel</option><option>Resort</option><option>Motel</option></select></label>
- <label>Estado<input id="aState"></label><label>Ciudad<input id="aCity"></label><label>Zona<input id="aZone"></label>
- <label>Precio normal USD<input id="aNormal" type="number"></label><label>Precio FindBed USD<input id="aFindbed" type="number"></label>
- <label>Abono USD<input id="aDeposit" type="number"></label><label>Habitaciones<input id="aRooms" type="number" value="4"></label>
- <label>Foto URL<input id="aPhoto"></label>
- </div>
- <button id="addHotelBtn" class="primary">Guardar hotel</button>
- <button id="logoutBtn" class="ghost">Cerrar sesión</button>
-   </div>
-</section>
-</main>
-<script src="app.js"></script>
-</body></html> 
- 
+ <input type="hidden" id="hotel-id">
+ <label>Nombre<input id="h-name" required></label>
+ <label>Categoría<select id="h-cat"><option>Hotel</option><option>Resort</option><option>Motel</option></select></label>
+ <label>Estado<input id="h-state" required></label>
+ <label>Ciudad<input id="h-city" required></label>
