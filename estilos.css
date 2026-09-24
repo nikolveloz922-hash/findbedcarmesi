@@ -1,2 +1,2 @@
-frontend/style.css
-*{box-sizing:border-box}body{margin:0;background:#100609;color:#f7edf0;font-family:system-ui,-apple-system,Segoe UI,sans-serif}.top{position:sticky;top:0;z-index:5;b
+
+:root{--bg:#210008;--red:#7e1231;--red2:#a71945;--dark:#43091b;--text:#fff8fb;--muted:#f0cbd7;--line:rgba(255,200,220,.38);--blue1:#006bdc;--blue2:#10b5ff
