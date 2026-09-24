@@ -1,23 +1,13 @@
-backend/worker.js
-const ORIGIN="https://nikolveloz922-hash.github.io";
-const MODEL="Qwen/Qwen2.5-VL-7B-Instruct";
-const json=(x,s=200)=>new Response(JSON.stringify(x),{status:s,headers:{"content-type":"application/json","access-control-allow-origin":ORIGIN,"access-control-allow-function cors(r){return r}
-async function sign(text,secret){let k=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);let b=await async function session(password,env){if(password!==env.ADMIN_PASSWORD)return null;let exp=Date.now()+86400000, p=`${exp}`;return p+"."+await sign(p,env.SESSION_SECREasync function valid(req,env){let h=req.headers.get("authorization")||"",t=h.replace("Bearer ",""),[p,s]=t.split(".");return p&&s&&Number(p)>Date.now()&&s===await sifunction code(){return "CB-"+crypto.randomUUID().replaceAll("-","").slice(0,10).toUpperCase()}
-export default {async fetch(req,env){
- if(req.method==="OPTIONS")return new Response("",{headers:{"access-control-allow-origin":ORIGIN,"access-control-allow-headers":"content-type,authorization","access- let u=new URL(req.url);
- try{
- if(u.pathname==="/api/hotels"&&req.method==="GET"){let r=await env.DB.prepare("SELECT * FROM hotels WHERE active=1 ORDER BY name").all();return json(r.results.map( if(u.pathname==="/api/reservations"&&req.method==="POST"){let b=await req.json();let h=await env.DB.prepare("SELECT * FROM hotels WHERE id=? AND active=1").bind(b. if(u.pathname.startsWith("/api/reservations/")&&u.pathname.endsWith("/quick-check")&&req.method==="POST"){
- let id=u.pathname.split("/")[3],f=await req.formData(),ref=String(f.get("reference")||"").trim(),file=f.get("proof");
- if(!ref||!file)return json({decision:"RECHAZADO",reason:"Faltan datos"},400);
- // Revisión rápida del comprobante. No tiene acceso al banco: no se presenta como prueba bancaria.
- let ai="REVISAR",reason="Sin análisis"; 
- if(env.HF_TOKEN){
- let bytes=new Uint8Array(await file.arrayBuffer());let b64=btoa(String.fromCharCode(...bytes));
- let r=await fetch("https://router.huggingface.co/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${env.HF_TOKEN}`,"content-type":"application/ if(r.ok){let j=await r.json();let t=j.choices?.[0]?.message?.content||"";let m=t.match(/\{[\s\S]*\}/);if(m){try{let x=JSON.parse(m[0]);ai=x.decision;reason=x.rea }
- if(ai!=="APROBADO")return json({decision:"RECHAZADO",reason:reason||"No se pudo comprobar rápidamente."});
- await env.DB.prepare("UPDATE reservations SET status='proof_received',payment_reference=? WHERE id=?").bind(ref,id).run();
- return json({decision:"APROBADO",reason:"Comprobante legible y coherente."})
- }
- if(u.pathname.startsWith("/api/reservations/")&&u.pathname.endsWith("/confirm")&&req.method==="POST"){let id=u.pathname.split("/")[3],b=await req.json();let c=b.co if(u.pathname==="/api/admin/login"&&req.method==="POST"){let b=await req.json(),s=await session(b.password,env);return s?json({session:s}):json({error:"unauthorize if(u.pathname==="/api/admin/hotels"&&await valid(req,env)){if(req.method==="GET"){let r=await env.DB.prepare("SELECT * FROM hotels ORDER BY name").all();return jso return json({error:"not_found"},404)
- }catch(e){return json({error:"server_error",detail:String(e)},500)}
+
+const MODEL="openai/gpt-oss-120b:fastest";
+const HF_URL="https://router.huggingface.co/v1/chat/completions";
+const cors=o=>({"Access-Control-Allow-Origin":o||"*","Access-Control-Allow-Methods":"GET,POST,DELETE,OPTIONS","Access-Control-Allow-Headers":"Content-Typeconst json=(x,s=200,o="*")=>new Response(JSON.stringify(x),{status:s,headers:cors(o)});
+const now=()=>new Date().toISOString();
+const id=()=>crypto.randomUUID();
+async function hash(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStasync function sign(payload,secret){const data=btoa(JSON.stringify(payload));const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secretasync function verify(token,secret){try{const [data,s]=token.split(".");const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{naasync function admin(req,e){const t=(req.headers.get("Authorization")||"").replace("Bearer ","");return t?await verify(t,e.SESSION_SECRET):null}
+async function sendTelegram(e,chat,text){if(!chat||!e.TELEGRAM_BOT_TOKEN)return;await fetch(`https://api.telegram.org/bot${e.TELEGRAM_BOT_TOKEN}/sendMessaasync function ai(e,b){const prompt=`Analiza este comprobante de Pago Movil como filtro antifraude. NO afirmes que el dinero llego al banco. Extrae banco,const r=await fetch(HF_URL,{method:"POST",headers:{"Authorization":`Bearer ${e.HF_TOKEN}`,"Content-Type":"application/json"},body:JSON.stringify({model:MOconst t=await r.text();if(!r.ok)throw Error("Hugging Face rechazó el análisis");let j=JSON.parse(t),s=j?.choices?.[0]?.message?.content||"",m=s.match(/\{[export default{async fetch(req,e){const o=req.headers.get("Origin")||"*";if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(o)});try{
+if(u.pathname==="/health")return json({ok:true},200,o);
+if(u.pathname==="/api/hotels"&&req.method==="GET"){const {results}=await e.DB.prepare("SELECT id,name,category,state,city,zone,level,normal,price,deposit,if(u.pathname==="/api/admin/login"&&req.method==="POST"){const b=await req.json();if(!e.ADMIN_PASSWORD||b.password!==e.ADMIN_PASSWORD)return json({error:"const ap=await admin(req,e);
+if(u.pathname==="/api/admin/hotels"&&req.method==="POST"){if(!ap)return json({error:"No autorizado"},401,o);const b=await req.json(),hid=id();await e.DB.plet m=u.pathname.match(/^\/api\/admin\/hotels\/([^/]+)$/);if(m&&req.method==="DELETE"){if(!ap)return json({error:"No autorizado"},401,o);await e.DB.preparm=u.pathname.match(/^\/api\/admin\/hotels\/([^/]+)\/telegram-link$/);if(m&&req.method==="POST"){if(!ap)return json({error:"No autorizado"},401,o);const toif(u.pathname==="/api/telegram/webhook"&&req.method==="POST"){const upd=await req.json(),msg=upd.message;if(msg?.text?.startsWith("/start HOTEL_")){const if(u.pathname==="/api/reservations"&&req.method==="POST"){const b=await req.json(),h=await e.DB.prepare("SELECT * FROM hotels WHERE id=? AND active=1").bim=u.pathname.match(/^\/api\/reservations\/([^/]+)\/proof$/);if(m&&req.method==="POST"){const b=await req.json(),r=await e.DB.prepare("SELECT r.*,h.name hoif(u.pathname==="/api/analyze-payment"&&req.method==="POST"){if(!e.HF_TOKEN)return json({error:"HF_TOKEN no configurado"},500,o);const b=await req.json();return json({error:"Ruta no encontrada"},404,o)
+}catch(err){return json({error:err.message||"Error interno"},500,o)}
 }};
