@@ -1,2 +1,272 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-:root{--bg:#210008;--red:#7e1231;--red2:#a71945;--dark:#43091b;--text:#fff8fb;--muted:#f0cbd7;--line:rgba(255,200,220,.38);--blue1:#006bdc;--blue2:#10b5ff
+body {
+  background: #1a0005 url('fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 12px;
+}
+
+.topbar {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.header-img {
+  width: 100%;
+  max-width: 380px;
+  border-radius: 12px;
+}
+
+.app-container {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* Ocultar/Mostrar Tarjetas de Pasos */
+.step-card {
+  display: none;
+  background: rgba(110, 15, 35, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+}
+
+.step-card.active {
+  display: block;
+  animation: slideIn 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-title {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.welcome-sub {
+  font-size: 0.88rem;
+  text-align: center;
+  color: #ddd;
+  margin: 8px 0 20px 0;
+}
+
+.step-header {
+  margin-bottom: 16px;
+}
+
+.step-number {
+  font-size: 0.75rem;
+  color: #fbbf24;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.step-header h2 {
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+/* Opciones de Categorías */
+.category-grid {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cat-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 16px 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.cat-card span { font-size: 1.8rem; }
+
+.cat-card.active {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Campos de Formulario */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+  color: #eee;
+}
+
+select, input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Botones de Navegación */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-primary-blue {
+  width: 100%;
+  background: linear-gradient(135deg, #0088ff, #0055cc);
+  border: none;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4);
+}
+
+.btn-secondary {
+  width: 35%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+/* Tarjeta del Hotel */
+.hotel-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.hotel-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 12px;
+}
+
+.price-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.old-price { font-size: 0.78rem; text-decoration: line-through; color: #aaa; }
+.new-price { font-size: 1rem; font-weight: bold; color: #22c55e; }
+.sub-price { font-size: 0.78rem; color: #38bdf8; margin-top: 2px; }
+
+/* Modal y Pago */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #121826;
+  border: 1px solid #0088ff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  color: white;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.price-breakdown {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+}
+
+.p-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.p-row.highlight b { color: #22c55e; }
+.p-row.pay-now b { color: #38bdf8; }
+.p-row.pay-hotel b { color: #fbbf24; }
+
+.bank-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.bank-title { font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; color: #38bdf8; }
+.bank-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; margin-bottom: 4px; }
+.btn-copy { background: #0088ff; border: none; color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; cursor: pointer; }
+
+.timer-box { text-align: center; margin: 10px 0; }
+.timer-label { font-size: 0.78rem; color: #aaa; }
+.timer { font-size: 1.3rem; font-weight: bold; color: #ff4d4d; }
+
+.btn-confirm { width: 100%; background: #10b981; border: none; color: white; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+.btn-cancel { width: 100%; background: transparent; border: none; color: #aaa; margin-top: 6px; cursor: pointer; }
+.pub-box { text-align: center; margin-top: 20px; }
+.img-pub { width: 100%; border-radius: 10px; }
+.pub-title { font-size: 0.8rem; margin-bottom: 6px; color: #ccc; }
+.alert-box { display: none; text-align: center; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 12px; }
+.hero-panda img { width: 110px; }
+.hero-section { text-align: center; }
+.img-portada { width: 100%; border-radius: 12px; margin-bottom: 8px; }
+.panda-mini { width: 28px; height: 28px; }
+.modal-header { display: flex; align-items: center; gap: 8px; justify-content: center; }
