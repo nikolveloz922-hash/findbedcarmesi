@@ -1,87 +1,52 @@
-/**
- * FindBed Carmesí - Backend API (Cloudflare Worker)
- * Archivo: backend/worker.js
- */
+const CACHE_NAME = 'findbed-carmesi-v1';
 
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
+// Archivos esenciales que se guardan en la memoria del dispositivo
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './estilos.css',
+  './script.js',
+  './manifest.json',
+  './datos.json',
+  './fondo.jpg',
+  './portada.jpg',
+  './Encabezado.jpg',
+  './panda-normal.png',
+  './panda-saludando.png',
+  './panda-hotel.png',
+  './panda-alerts.png',
+  './Anuncio PinkWeather.jpg'
+];
 
-    // Encabezados de seguridad CORS para permitir comunicación con GitHub Pages
-    const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Content-Type': 'application/json; charset=utf-8'
-    };
+// Instalación del Service Worker
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS_TO_CACHE);
+    }).then(() => self.skipWaiting())
+  );
+});
 
-    // Responder a las solicitudes de verificación previa de navegador (Preflight CORS)
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { 
-        status: 204, 
-        headers: corsHeaders 
-      });
-    }
+// Activación y limpieza de cachés antiguas
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
 
-    // Ruta 1: Verificación de estado del servidor (/api/status)
-    if (url.pathname === '/api/status' && request.method === 'GET') {
-      return new Response(JSON.stringify({
-        status: 'online',
-        mensaje: 'Servidor Backend FindBed Carmesí operando correctamente',
-        timestamp: new Date().toISOString()
-      }), {
-        status: 200,
-        headers: corsHeaders
-      });
-    }
-
-    // Ruta 2: Procesar comprobante de pago y generar código (/api/reserva)
-    if (url.pathname === '/api/reserva' && request.method === 'POST') {
-      try {
-        const datos = await request.json();
-
-        if (!datos.referencia) {
-          return new Response(JSON.stringify({
-            success: false,
-            error: 'Número de referencia de Pago Móvil no proporcionado'
-          }), {
-            status: 400,
-            headers: corsHeaders
-          });
-        }
-
-        // Generar un código único de reserva aleatorio (Ej: FB-849204)
-        const codigoGenerado = "FB-" + Math.floor(100000 + Math.random() * 900000);
-
-        return new Response(JSON.stringify({
-          success: true,
-          mensaje: 'Comprobante recibido con éxito',
-          codigoReserva: codigoGenerado,
-          referencia: datos.referencia,
-          fecha: new Date().toLocaleDateString('es-VE')
-        }), {
-          status: 200,
-          headers: corsHeaders
-        });
-
-      } catch (err) {
-        return new Response(JSON.stringify({
-          success: false,
-          error: 'Error al procesar el formato JSON de la solicitud'
-        }), {
-          status: 400,
-          headers: corsHeaders
-        });
-      }
-    }
-
-    // Respuesta para cualquier otra ruta no definida
-    return new Response(JSON.stringify({
-      error: 'Ruta API no encontrada'
-    }), {
-      status: 404,
-      headers: corsHeaders
-    });
-  }
-};
-                          
+// Estrategia: Buscar en red primero, si falla o no hay datos, cargar desde el Caché
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    fetch(e.request).catch(() => {
+      return caches.match(e.request);
+    })
+  );
+});
