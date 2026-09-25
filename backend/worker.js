@@ -1,13 +1,142 @@
+/**
+ * FindBed Carmesí - Backend Worker API
+ * Archivo: worker.js (o backend/worker.js)
+ */
 
-const MODEL="openai/gpt-oss-120b:fastest";
-const HF_URL="https://router.huggingface.co/v1/chat/completions";
-const cors=o=>({"Access-Control-Allow-Origin":o||"*","Access-Control-Allow-Methods":"GET,POST,DELETE,OPTIONS","Access-Control-Allow-Headers":"Content-Typeconst json=(x,s=200,o="*")=>new Response(JSON.stringify(x),{status:s,headers:cors(o)});
-const now=()=>new Date().toISOString();
-const id=()=>crypto.randomUUID();
-async function hash(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStasync function sign(payload,secret){const data=btoa(JSON.stringify(payload));const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secretasync function verify(token,secret){try{const [data,s]=token.split(".");const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{naasync function admin(req,e){const t=(req.headers.get("Authorization")||"").replace("Bearer ","");return t?await verify(t,e.SESSION_SECRET):null}
-async function sendTelegram(e,chat,text){if(!chat||!e.TELEGRAM_BOT_TOKEN)return;await fetch(`https://api.telegram.org/bot${e.TELEGRAM_BOT_TOKEN}/sendMessaasync function ai(e,b){const prompt=`Analiza este comprobante de Pago Movil como filtro antifraude. NO afirmes que el dinero llego al banco. Extrae banco,const r=await fetch(HF_URL,{method:"POST",headers:{"Authorization":`Bearer ${e.HF_TOKEN}`,"Content-Type":"application/json"},body:JSON.stringify({model:MOconst t=await r.text();if(!r.ok)throw Error("Hugging Face rechazó el análisis");let j=JSON.parse(t),s=j?.choices?.[0]?.message?.content||"",m=s.match(/\{[export default{async fetch(req,e){const o=req.headers.get("Origin")||"*";if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors(o)});try{
-if(u.pathname==="/health")return json({ok:true},200,o);
-if(u.pathname==="/api/hotels"&&req.method==="GET"){const {results}=await e.DB.prepare("SELECT id,name,category,state,city,zone,level,normal,price,deposit,if(u.pathname==="/api/admin/login"&&req.method==="POST"){const b=await req.json();if(!e.ADMIN_PASSWORD||b.password!==e.ADMIN_PASSWORD)return json({error:"const ap=await admin(req,e);
-if(u.pathname==="/api/admin/hotels"&&req.method==="POST"){if(!ap)return json({error:"No autorizado"},401,o);const b=await req.json(),hid=id();await e.DB.plet m=u.pathname.match(/^\/api\/admin\/hotels\/([^/]+)$/);if(m&&req.method==="DELETE"){if(!ap)return json({error:"No autorizado"},401,o);await e.DB.preparm=u.pathname.match(/^\/api\/admin\/hotels\/([^/]+)\/telegram-link$/);if(m&&req.method==="POST"){if(!ap)return json({error:"No autorizado"},401,o);const toif(u.pathname==="/api/telegram/webhook"&&req.method==="POST"){const upd=await req.json(),msg=upd.message;if(msg?.text?.startsWith("/start HOTEL_")){const if(u.pathname==="/api/reservations"&&req.method==="POST"){const b=await req.json(),h=await e.DB.prepare("SELECT * FROM hotels WHERE id=? AND active=1").bim=u.pathname.match(/^\/api\/reservations\/([^/]+)\/proof$/);if(m&&req.method==="POST"){const b=await req.json(),r=await e.DB.prepare("SELECT r.*,h.name hoif(u.pathname==="/api/analyze-payment"&&req.method==="POST"){if(!e.HF_TOKEN)return json({error:"HF_TOKEN no configurado"},500,o);const b=await req.json();return json({error:"Ruta no encontrada"},404,o)
-}catch(err){return json({error:err.message||"Error interno"},500,o)}
-}};
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+
+    // Configuración de encabezados CORS para peticiones desde GitHub Pages
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+
+    // Responder a las solicitudes de verificación previa (Preflight CORS)
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { 
+        status: 204, 
+        headers: corsHeaders 
+      });
+    }
+
+    // RUTA 1: Verificación de estado del servidor
+    if (url.pathname === '/api/status' && request.method === 'GET') {
+      return new Response(JSON.stringify({
+        status: 'online',
+        sistema: 'FindBed Carmesí API Active',
+        timestamp: new Date().toISOString()
+      }), {
+        status: 200,
+        headers: corsHeaders
+      });
+    }
+
+    // RUTA 2: Obtener lista de hoteles con consulta SQL uniendo las tablas
+    if (url.pathname === '/api/hoteles' && request.method === 'GET') {
+      try {
+        const query = `
+          SELECT 
+            h.id, 
+            h.nombre, 
+            h.categoria, 
+            h.nivel, 
+            h.habitaciones,
+            h.precio_oficial AS precioOficial, 
+            h.precio_oferta AS precioOferta,
+            h.anticipo, 
+            h.pago_restante AS pagoRestante, 
+            h.imagen,
+            e.nombre AS estado, 
+            c.nombre AS ciudad, 
+            z.nombre AS zona
+          FROM hoteles h
+          JOIN estados e ON h.estado_id = e.id
+          JOIN ciudades c ON h.ciudad_id = c.id
+          JOIN zonas z ON h.zona_id = z.id;
+        `;
+
+        const { results } = await env.DB.prepare(query).all();
+
+        return new Response(JSON.stringify({
+          success: true,
+          total: results.length,
+          data: results
+        }), {
+          status: 200,
+          headers: corsHeaders
+        });
+
+      } catch (error) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: 'Error al consultar la base de datos SQL: ' + error.message
+        }), {
+          status: 500,
+          headers: corsHeaders
+        });
+      }
+    }
+
+    // RUTA 3: Guardar comprobante y procesar reserva en la tabla SQL 'reservas'
+    if (url.pathname === '/api/reserva' && request.method === 'POST') {
+      try {
+        const datos = await request.json();
+
+        if (!datos.hotelId || !datos.referencia) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Faltan parámetros requeridos (hotelId o referencia)'
+          }), {
+            status: 400,
+            headers: corsHeaders
+          });
+        }
+
+        // Generar código aleatorio con prefijo FB (Ejemplo: FB-849204)
+        const codigoGenerado = "FB-" + Math.floor(100000 + Math.random() * 900000);
+
+        // Insertar en la base de datos D1
+        const insertQuery = `
+          INSERT INTO reservas (codigo_reserva, hotel_id, referencia_pago, monto_anticipo, estado_pago)
+          VALUES (?, ?, ?, ?, 'pendiente');
+        `;
+
+        await env.DB.prepare(insertQuery)
+          .bind(codigoGenerado, datos.hotelId, datos.referencia, datos.monto || 0)
+          .run();
+
+        return new Response(JSON.stringify({
+          success: true,
+          mensaje: 'Reserva registrada exitosamente en la base de datos SQL',
+          codigoReserva: codigoGenerado,
+          referencia: datos.referencia
+        }), {
+          status: 200,
+          headers: corsHeaders
+        });
+
+      } catch (error) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: 'Error al registrar la reserva: ' + error.message
+        }), {
+          status: 500,
+          headers: corsHeaders
+        });
+      }
+    }
+
+    // Ruta por defecto para endpoints no existentes
+    return new Response(JSON.stringify({
+      error: 'Ruta API no encontrada'
+    }), {
+      status: 404,
+      headers: corsHeaders
+    });
+  }
+};
+      
