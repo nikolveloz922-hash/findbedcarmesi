@@ -1,7 +1,80 @@
-// Variable global para registrar la categoría activa
+// ==========================================
+// 1. VARIABLES GLOBALES Y TUTORIAL DEL PANDA
+// ==========================================
 let categoriaSeleccionada = "Hotel";
+let hotelSeleccionado = null;
+let timerInterval = null;
+let tiempoRestante = 900;
+let pasoTutorialActual = 0;
 
-// Navegación entre pantallas (Pasos)
+const pasosTutorial = [
+  {
+    texto: "¡Hola! Soy tu asistente Carmesí 🐼. Te enseñaré a reservar en 3 sencillos pasos.",
+    boton: "Siguiente ➡️"
+  },
+  {
+    texto: "Primero, elige qué tipo de hospedaje buscas: Hotel, Resort, Motel, Estándar o Suite.",
+    boton: "Entendido ➡️"
+  },
+  {
+    texto: "Luego, selecciona el Estado, Ciudad y Zona de tu preferencia para ver la disponibilidad.",
+    boton: "¡Listo para empezar! 🚀"
+  }
+];
+
+// Carga inicial al abrir la app
+document.addEventListener("DOMContentLoaded", () => {
+  cargarEstados();
+
+  // Escuchar clics en todos los botones de la cuadrícula de categorías
+  const botonesCategoria = document.querySelectorAll(".category-grid .cat-card");
+  botonesCategoria.forEach(btn => {
+    btn.addEventListener("click", function () {
+      const nombreCategoria = this.dataset.category || this.querySelector("b")?.innerText || this.innerText.trim();
+      seleccionarCategoria(nombreCategoria, this);
+    });
+  });
+});
+
+// Funciones para controlar el Panda Tutorial
+function avanzarTutorial() {
+  pasoTutorialActual++;
+  const txtBubble = document.getElementById("pandaBubbleText");
+  const btnTut = document.getElementById("btnPandaTutorial");
+
+  if (pasoTutorialActual < pasosTutorial.length) {
+    if (txtBubble) txtBubble.innerText = pasosTutorial[pasoTutorialActual].texto;
+    if (btnTut) btnTut.innerText = pasosTutorial[pasoTutorialActual].boton;
+  } else {
+    minimizarPanda();
+  }
+}
+
+function minimizarPanda() {
+  const pandaHero = document.getElementById("pandaHeroContainer");
+  const pandaFloat = document.getElementById("pandaFloatingBtn");
+  
+  if (pandaHero) pandaHero.style.display = "none";
+  if (pandaFloat) pandaFloat.style.display = "flex";
+}
+
+function reabrirPanda() {
+  pasoTutorialActual = 0;
+  const pandaHero = document.getElementById("pandaHeroContainer");
+  const pandaFloat = document.getElementById("pandaFloatingBtn");
+  const txtBubble = document.getElementById("pandaBubbleText");
+  const btnTut = document.getElementById("btnPandaTutorial");
+
+  if (txtBubble) txtBubble.innerText = pasosTutorial[0].texto;
+  if (btnTut) btnTut.innerText = pasosTutorial[0].boton;
+
+  if (pandaHero) pandaHero.style.display = "flex";
+  if (pandaFloat) pandaFloat.style.display = "none";
+}
+
+// ==========================================
+// 2. NAVEGACIÓN Y SELECCIÓN DE CATEGORÍAS
+// ==========================================
 function siguientePaso(paso) {
   document.querySelectorAll(".step-card").forEach(card => card.classList.remove("active"));
   const stepTarget = document.getElementById(`step-${paso}`);
@@ -11,54 +84,43 @@ function siguientePaso(paso) {
   }
 }
 
-// LÓGICA DE BOTONES: Enciende el botón presionado y apaga los demás
 function seleccionarCategoria(cat, elemento) {
   categoriaSeleccionada = cat;
 
-  // Busca todos los botones dentro del contenedor de categorías y quita la clase activa
-  const todosLosBotones = document.querySelectorAll(".category-grid .cat-card");
-  todosLosBotones.forEach(btn => btn.classList.remove("active"));
-
-  // Marca como activo el botón que presionaste
+  // Enciende el botón seleccionado y apaga los demás
+  document.querySelectorAll(".category-grid .cat-card").forEach(btn => btn.classList.remove("active"));
   if (elemento) {
     elemento.classList.add("active");
   }
 }
 
-// Asignación de eventos 'click' a todos los botones de categoría
-document.addEventListener("DOMContentLoaded", () => {
-  cargarEstados();
-
-  // Escucha clics en cualquier botón dentro de .category-grid
-  const botonesCategoria = document.querySelectorAll(".category-grid .cat-card");
-  botonesCategoria.forEach(btn => {
-    btn.addEventListener("click", function () {
-      // Extrae el texto del botón o su atributo data-category
-      const nombreCategoria = this.dataset.category || this.querySelector("b")?.innerText || this.innerText.trim();
-      seleccionarCategoria(nombreCategoria, this);
-    });
-  });
-});
-
-// Base de datos completa de Venezuela (23 Estados + Distrito Capital)
+// ==========================================
+// 3. BASE DE DATOS DE VENEZUELA (24 TERRITORIOS)
+// ==========================================
 const ubicacionesVzla = {
   "Caracas (Distrito Capital)": {
     "Chacao": ["Altamira", "La Castellana", "Los Palos Grandes"],
     "Baruta": ["Las Mercedes", "Prados del Este"],
     "Libertador": ["Centro Histórico", "El Recreo", "Sabana Grande"]
   },
-  "Amazonas": { "Puerto Ayacucho": ["Centro", "Avenida Orinoco"] },
+  "Amazonas": {
+    "Puerto Ayacucho": ["Centro", "Avenida Orinoco"]
+  },
   "Anzoátegui": {
     "Puerto La Cruz": ["Paseo Colón", "Sector Venecia"],
     "Lechería": ["El Morro", "Avenida Principal"],
     "Barcelona": ["Centro", "Las Garzas"]
   },
-  "Apure": { "San Fernando de Apure": ["Centro", "Paseo Libertador"] },
+  "Apure": {
+    "San Fernando de Apure": ["Centro", "Paseo Libertador"]
+  },
   "Aragua": {
     "Maracay": ["Las Delicias", "Base Aragua", "El Castaño"],
     "Choroní": ["Puerto Colombia"]
   },
-  "Barinas": { "Barinas": ["Alto Barinas", "Centro"] },
+  "Barinas": {
+    "Barinas": ["Alto Barinas", "Centro"]
+  },
   "Bolívar": {
     "Ciudad Guayana (Puerto Ordaz)": ["Alta Vista", "Unare"],
     "Ciudad Bolívar": ["Paseo Orinoco", "Centro Histórico"]
@@ -71,7 +133,9 @@ const ubicacionesVzla = {
     "Tinaquillo": ["Centro", "Avenida Bolívar", "Zona Industrial"],
     "San Carlos": ["Centro", "Los Samanes"]
   },
-  "Delta Amacuro": { "Tucupita": ["Centro", "Manamo"] },
+  "Delta Amacuro": {
+    "Tucupita": ["Centro", "Manamo"]
+  },
   "Falcón": {
     "Punto Fijo": ["Comunidad Cardón", "Centro"],
     "Coro": ["Zona Colonial", "Centro"],
@@ -81,7 +145,9 @@ const ubicacionesVzla = {
     "San Juan de los Morros": ["Centro", "Avenida Bolívar"],
     "Valle de la Pascua": ["Centro"]
   },
-  "Lara": { "Barquisimeto": ["El Uro", "Piedras Blancas", "Centro", "Cabudare"] },
+  "Lara": {
+    "Barquisimeto": ["El Uro", "Piedras Blancas", "Centro", "Cabudare"]
+  },
   "Mérida": {
     "Mérida": ["Paseo La Sierra", "La Hechicera", "Sector Milla"],
     "El Vigía": ["Centro"]
@@ -91,7 +157,9 @@ const ubicacionesVzla = {
     "Guatire / Guarenas": ["Castillejo", "Nueva Casarapa"],
     "Higuerote": ["Zona Playera"]
   },
-  "Monagas": { "Maturín": ["Tipuro", "Juanico", "Centro"] },
+  "Monagas": {
+    "Maturín": ["Tipuro", "Juanico", "Centro"]
+  },
   "Nueva Esparta": {
     "Porlamar": ["Bella Vista", "Avenida 4 de Mayo"],
     "Pampatar": ["Bahía de Pampatar", "Zona Gastronómica"],
@@ -105,7 +173,9 @@ const ubicacionesVzla = {
     "Cumaná": ["Centro Histórico", "Avenida Perimetral"],
     "Carúpano": ["Centro"]
   },
-  "Táchira": { "San Cristóbal": ["Pueblo Nuevo", "Barrio Obrero", "Centro"] },
+  "Táchira": {
+    "San Cristóbal": ["Pueblo Nuevo", "Barrio Obrero", "Centro"]
+  },
   "Trujillo": {
     "Valera": ["Centro", "La Puerta"],
     "Trujillo": ["Centro Histórico"]
@@ -114,7 +184,9 @@ const ubicacionesVzla = {
     "Catia La Mar": ["Zona Playera", "Playa Grande"],
     "Macuto": ["El Castillete", "Caraballeda"]
   },
-  "Yaracuy": { "San Felipe": ["Centro", "Avenida Yaracuy"] },
+  "Yaracuy": {
+    "San Felipe": ["Centro", "Avenida Yaracuy"]
+  },
   "Zulia": {
     "Maracaibo": ["Bella Vista", "5 de Julio", "El Milagro"],
     "San Francisco": ["La Coromoto"]
@@ -159,7 +231,9 @@ function cargarZonas() {
   }
 }
 
-// Lista de alojamientos con distintas categorías para probar
+// ==========================================
+// 4. BÚSQUEDA Y RESULTADOS
+// ==========================================
 const hotelesPrueba = [
   {
     id: 1,
@@ -202,7 +276,7 @@ const hotelesPrueba = [
   },
   {
     id: 4,
-    nombre: "Motel Carmesí Sweet",
+    nombre: "Motel Sweet Carmesí",
     categoria: "Moteles",
     estado: "Caracas (Distrito Capital)",
     ciudad: "Baruta",
@@ -228,7 +302,6 @@ const hotelesPrueba = [
   }
 ];
 
-// Ejecuta la búsqueda comparando sin importar mayúsculas, minúsculas o plurales
 function ejecutarBusqueda() {
   const estado = document.getElementById("selectEstado").value;
   const ciudad = document.getElementById("selectCiudad").value;
@@ -239,7 +312,7 @@ function ejecutarBusqueda() {
   const filtrados = hotelesPrueba.filter(h => {
     const catHotel = h.categoria.toLowerCase().trim();
     
-    // Coincidencia de categoría flexible (ej: Hotel / Hoteles / Suite)
+    // Comparación flexible de categorías
     const matchCat = catHotel.includes(catLimpia) || catLimpia.includes(catHotel);
     const matchEst = !estado || h.estado === estado;
     const matchCiu = !ciudad || h.ciudad === ciudad;
@@ -258,10 +331,10 @@ function renderHoteles(lista) {
   container.innerHTML = "";
 
   if (lista.length === 0) {
-    noResults.style.display = "block";
+    if (noResults) noResults.style.display = "block";
     return;
   }
-  noResults.style.display = "none";
+  if (noResults) noResults.style.display = "none";
 
   lista.forEach(h => {
     const card = document.createElement("div");
@@ -286,11 +359,9 @@ function renderHoteles(lista) {
   });
 }
 
-// Modal y Temporizador de 15 Minutos
-let hotelSeleccionado = null;
-let timerInterval = null;
-let tiempoRestante = 900;
-
+// ==========================================
+// 5. MODAL DE PAGO Y VERIFICACIÓN CON PANDAS
+// ==========================================
 function abrirModalPago(id) {
   hotelSeleccionado = hotelesPrueba.find(h => h.id === id);
   document.getElementById("modalHotelName").innerText = hotelSeleccionado.nombre;
@@ -298,6 +369,10 @@ function abrirModalPago(id) {
   document.getElementById("pFindBed").innerText = `USD $${hotelSeleccionado.precioFindBed}`;
   document.getElementById("pAnticipo").innerText = `USD $${hotelSeleccionado.anticipo}`;
   document.getElementById("pSaldo").innerText = `USD $${hotelSeleccionado.saldoHotel}`;
+
+  // Mostrar el formulario y ocultar el área de verificación
+  document.getElementById("pagoFormBox").style.display = "block";
+  document.getElementById("pagoStatusBox").style.display = "none";
 
   document.getElementById("modalPago").style.display = "flex";
   iniciarContador();
@@ -316,10 +391,9 @@ function iniciarContador() {
   timerInterval = setInterval(() => {
     const m = Math.floor(tiempoRestante / 60);
     const s = tiempoRestante % 60;
-    display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    if (display) display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     if (tiempoRestante <= 0) {
       clearInterval(timerInterval);
-      alert("El tiempo de reserva ha expirado.");
       cerrarModal();
     }
     tiempoRestante--;
@@ -328,18 +402,40 @@ function iniciarContador() {
 
 function copiarTexto(texto) {
   navigator.clipboard.writeText(texto);
-  alert("Copiado: " + texto);
+  alert("Copiado al portapapeles: " + texto);
 }
 
+// Proceso dinámico de verificación del pago
 function enviarComprobante() {
   const ref = document.getElementById("inputRef").value;
   const file = document.getElementById("inputFile").files[0];
 
+  const formBox = document.getElementById("pagoFormBox");
+  const statusBox = document.getElementById("pagoStatusBox");
+  const imgPandaStatus = document.getElementById("imgPandaStatus");
+  const txtPandaStatus = document.getElementById("txtPandaStatus");
+  const codePandaStatus = document.getElementById("codePandaStatus");
+
   if (!ref || !file) {
-    alert("Ingresa la referencia bancaria y adjunta la captura del comprobante.");
+    alert("Por favor ingresa el número de referencia y adjunta la captura del comprobante.");
     return;
   }
 
-  alert("Comprobante recibido exitosamente. Tu reserva se encuentra en revisión. Código asignado: FB-" + Math.floor(100000 + Math.random() * 900000));
-  cerrarModal();
+  // Ocultar formulario y mostrar pantalla con el Panda
+  formBox.style.display = "none";
+  statusBox.style.display = "block";
+
+  // Estado 1: Panda Verificando
+  imgPandaStatus.src = "panda-revisando.png";
+  txtPandaStatus.innerText = "El Panda está verificando tu pago móvil... Por favor espera unos segundos.";
+  codePandaStatus.style.display = "none";
+
+  // Estado 2: Respuesta con Código tras 3 segundos
+  setTimeout(() => {
+    const codigoReserva = "FB-" + Math.floor(100000 + Math.random() * 900000);
+    imgPandaStatus.src = "panda-exito.png";
+    txtPandaStatus.innerText = "¡Pago Verificado con Éxito! Tu reserva ha sido confirmada.";
+    codePandaStatus.innerText = "Código de Reserva: " + codigoReserva;
+    codePandaStatus.style.display = "block";
+  }, 3000);
 }
