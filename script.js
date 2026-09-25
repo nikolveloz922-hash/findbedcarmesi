@@ -1,38 +1,310 @@
-
-/* FINDBED CARMESÍ — SCRIPT PRINCIPAL
- La búsqueda se ejecuta ÚNICAMENTE al pulsar Buscar Disponibilidad.
- Estados Ciudades Zonas se mantienen en locationsData.
-*/
-const API_URL="https://TU-WORKER.workers.dev";
-const locationsData={
-"Amazonas":{"Puerto Ayacucho":["Centro","Av. Orinoco","Av. 23 de Enero"]},
-"Anzoátegui":{"Lechería":["Av. Principal","El Morro","Cerro El Morro"],"Puerto La Cruz":["Paseo Colón","Centro","Av. Municipal"],"Barcelona":["Centro","Nu"Apure":{"San Fernando de Apure":["Centro","Paseo Libertador","Biruaca"]},
-"Aragua":{"Maracay":["Las Delicias","El Castaño","Base Aragua","La Soledad","Centro","San Jacinto"],"Cagua":["Centro","Corinsa"],"Turmero":["Centro","Inte"Barinas":{"Barinas":["Alto Barinas","Centro","Av. Cuatricentenaria"]},
-"Bolívar":{"Puerto Ordaz":["Alta Vista","Unare","Chilemex"],"Ciudad Bolívar":["Paseo Orinoco","Casco Histórico"]},
-"Carabobo":{"Valencia":["Viñedo","Prebo","El Trigal","Naguanagua","Mañongo","Zona Industrial","Centro"],"Puerto Cabello":["Casco Histórico","Quizandal","P"Cojedes":{"Tinaquillo":["Centro","Av. Miranda","Zona Industrial","Buenos Aires","San Josecito"],"San Carlos":["Centro Histórico","Av. Bolívar","San Rafae"Delta Amacuro":{"Tucupita":["Centro","Av. Manamo"]},
-"Distrito Capital":{"Caracas":["Altamira","Las Mercedes","La Castellana","Chacao","Sabana Grande","El Recreo","Plaza Venezuela","Capitolio"]},
-"Falcón":{"Punto Fijo":["Centro","Zona Libre","Judibana"],"Coro":["Casco Colonial","Av. Independencia"],"Chichiriviche":["Centro","Playa Sur","Zona de Emb"Guárico":{"San Juan de los Morros":["Centro","Aguas Termales"],"Calabozo":["Centro Histórico"]},
-"Lara":{"Barquisimeto":["Este / Nueva Segovia","Centro","Cabudare"],"Carora":["Centro Histórico"]},
-"Mérida":{"Mérida":["Centro","Av. Las Américas","La Hechicera","Chorros de Milla"]},
-"Miranda":{"Los Teques":["Centro","San Antonio de los Altos","Carrizal"],"Guarenas / Guatire":["Nueva Casarapa","Castillejo"],"Higuerote":["Centro","Puert"Monagas":{"Maturín":["Tipuro","Juanico","Centro"]},
-"Nueva Esparta":{"Porlamar / Pampatar":["Pampatar","Costa Azul","Av. 4 de Mayo","Playa el Agua"]},
-"Portuguesa":{"Acarigua / Araure":["Centro Acarigua","Centro Araure","Llano Mall"],"Guanare":["Centro"]},
-"Sucre":{"Cumaná":["Centro","San Luis"],"Carúpano":["Centro"]},
-"Táchira":{"San Cristóbal":["Barrio Obrero","Pueblo Nuevo","Centro"],"San Antonio del Táchira":["Centro"]},
-"Trujillo":{"Valera":["Centro","Las Acacias","La Puerta"],"Trujillo":["Casco Central"]},
-"La Guaira":{"Catia La Mar / Maiquetía":["Zona Aeropuerto","Caraballeda","Catia La Mar"]},
-"Yaracuy":{"San Felipe":["Centro","Av. Yaracuy","Independencia"],"Yaritagua":["Centro"]},
-"Zulia":{"Maracaibo":["Bella Vista","5 de Julio","El Milagro","Santa Lucía"],"Cabimas":["Centro"]}
+// Base de datos completa de Ubicaciones de Venezuela (23 Estados, DCO y DPF)
+const ubicacionesVzla = {
+  "Caracas (Distrito Capital)": {
+    "Chacao": ["Altamira", "La Castellana", "Los Palos Grandes", "El Bosque"],
+    "Baruta": ["Las Mercedes", "Prados del Este", "El Cafetal"],
+    "Libertador": ["Centro Histórico", "El Recreo", "La Candelaria", "Sabana Grande"]
+  },
+  "Amazonas": {
+    "Puerto Ayacucho": ["Centro", "Avenida Orinoco"]
+  },
+  "Anzoátegui": {
+    "Puerto La Cruz": ["Paseo Colón", "Centro"],
+    "Lechería": ["El Morro", "Av. Principal Lechería"],
+    "Barcelona": ["Centro", "Nueva Barcelona"]
+  },
+  "Apure": {
+    "San Fernando de Apure": ["Centro", "Av. Carabobo"]
+  },
+  "Aragua": {
+    "Maracay": ["Las Delicias", "Base Aragua", "El Limón"],
+    "Choroní": ["Puerto Colombia", "El Pueblo"]
+  },
+  "Barinas": {
+    "Barinas": ["Alto Barinas", "Centro"]
+  },
+  "Bolívar": {
+    "Ciudad Guayana": ["Puerto Ordaz", "San Félix"],
+    "Ciudad Bolívar": ["Casco Histórico", "Paseo Orinoco"]
+  },
+  "Carabobo": {
+    "Valencia": ["El Trigal", "Prebo", "Mañongo", "Naguanagua"],
+    "Puerto Cabello": ["Zona Playera", "Casco Histórico"]
+  },
+  "Cojedes": {
+    "Tinaquillo": ["Centro", "Avenida Bolívar", "Zona Industrial"],
+    "San Carlos": ["Centro", "Los Samanes"]
+  },
+  "Delta Amacuro": {
+    "Tucupita": ["Centro", "Av. Rivera"]
+  },
+  "Falcón": {
+    "Punto Fijo": ["Comunidad Cardón", "Centro"],
+    "Coro": ["Casco Colonial", "Av. Independencia"]
+  },
+  "Guárico": {
+    "San Juan de los Morros": ["Centro", "Av. Bolívar"],
+    "Valle de la Pascua": ["Centro"]
+  },
+  "Lara": {
+    "Barquisimeto": ["El Uro", "Cabudare", "Centro"],
+    "Carora": ["Centro Histórico"]
+  },
+  "Mérida": {
+    "Mérida": ["Milla", "Los Cursos", "Las Heroínas"],
+    "El Vigía": ["Centro"]
+  },
+  "Miranda": {
+    "Los Teques": ["Centro", "El Paso"],
+    "Guatire": ["Castillejo", "Centro"],
+    "Guarenas": ["Nueva Casarapa", "Centro"]
+  },
+  "Monagas": {
+    "Maturín": ["Tipuro", "Centro", "Juanico"]
+  },
+  "Nueva Esparta": {
+    "Porlamar": ["Bella Vista", "Costa Azul"],
+    "Pampatar": ["Bahía de Pampatar", "Pampatar Centro"]
+  },
+  "Portuguesa": {
+    "Acarigua": ["Centro", "Araure"],
+    "Guanare": ["Centro"]
+  },
+  "Sucre": {
+    "Cumaná": ["Centro", "San Luis"],
+    "Carúpano": ["Centro"]
+  },
+  "Táchira": {
+    "San Cristóbal": ["Pueblo Nuevo", "La Concordia", "Centro"],
+    "San Antonio del Táchira": ["Centro"]
+  },
+  "Trujillo": {
+    "Trujillo": ["Centro"],
+    "Valera": ["La Puerta", "Centro"]
+  },
+  "La Guaira": {
+    "La Guaira": ["Macuto", "Naiguatá", "Catia La Mar"]
+  },
+  "Yaracuy": {
+    "San Felipe": ["Centro", "Higuerón"]
+  },
+  "Zulia": {
+    "Maracaibo": ["Bella Vista", "5 de Julio", "El Milagro"],
+    "Cabimas": ["Centro"]
+  },
+  "Dependencias Federales": {
+    "Los Roques": ["Gran Roque"]
+  }
 };
-const DEMO_HOTELS=[
-{id:"royal",name:"Hotel Carmesí Royal",category:"Hotel",level:"Alta Gama",state:"Carabobo",city:"Valencia",zone:"Viñedo",normal:80,price:70,deposit:10,roo{id:"posada",name:"Posada Express Carmesí",category:"Hotel",level:"Económica",state:"Cojedes",city:"Tinaquillo",zone:"Centro",normal:25,price:25,deposit:4];
-let hotels=[],category="Hotel",level="",selectedHotel=null,selectedRoom=null,timerId=null,reservation=null;
-const $=id=>document.getElementById(id), $$=s=>[...document.querySelectorAll(s)];
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-function money(n){return "USD $"+Number(n||0).toFixed(2)}
-function show(id){$$('.step').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
-function msg(text,type=""){const e=$("search-message");e.textContent=text;e.className="notice "+type}
-function fillLocations(){const e=$("estado");Object.keys(locationsData).sort((a,b)=>a.localeCompare(b,"es")).forEach(s=>e.insertAdjacentHTML("beforeend",`async function loadHotels(){try{const r=await fetch(API_URL+"/api/hotels");if(!r.ok)throw 0;const d=await r.json();hotels=d.hotels||DEMO_HOTELS;hotels=hotfunction setupPills(){[...$$('#cat-buttons .pill')].forEach(b=>b.onclick=()=>{$$('#cat-buttons .pill').forEach(x=>x.classList.remove('selected'));b.classLfunction renderHotels(){const s=$("estado").value,c=$("ciudad").value,z=$("zona").value;const arr=hotels.filter(h=>h.category===category&&(!level||h.levelfunction openHotel(id){selectedHotel=hotels.find(h=>String(h.id)===String(id));if(!selectedHotel)return;const gallery=selectedHotel.gallery?.length?selectfunction prepareRoom(){const opts=[{name:"Matrimonial",cap:2},{name:"Sencilla",cap:1},{name:"Suite VIP",cap:4}];$("room-list").innerHTML=opts.map((r,i)=>`function nightCount(){const a=new Date($("checkin").value+"T00:00:00"),b=new Date($("checkout").value+"T00:00:00");const n=Math.ceil((b-a)/86400000);returfunction updateSummary(){if(!selectedHotel)return;const n=nightCount(),total=n*selectedHotel.price;$("room-summary").innerHTML=`<strong>${n||0} noche${n==async function createReservation(){const n=nightCount();if(!selectedHotel||!n)throw Error("Revisa las fechas.");const body={hotelId:selectedHotel.id,checkasync function beginPayment(){try{selectedRoom=document.querySelector('input[name="room"]:checked')?.value;if(!selectedRoom)throw Error("Selecciona una hafunction startTimer(){clearInterval(timerId);let left=900;const tick=()=>{$("timer").textContent=`${String(Math.floor(left/60)).padStart(2,"0")}:${String(function fileData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
-async function submitPayment(e){e.preventDefault();const status=$("pay-status"),file=$("pay-file").files[0];status.textContent="Comprobando rápidamente…";async function adminLogin(){try{const r=await fetch(API_URL+"/api/admin/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringfunction adminHeaders(){return {"Content-Type":"application/json","Authorization":"Bearer "+sessionStorage.getItem("findbed_admin")}}
-function renderAdmin(){$("admin-hotels").innerHTML=hotels.map(h=>`<div class="summary-row"><span>${esc(h.name)} — ${esc(h.city)}</span><button data-del="$async function saveHotel(e){e.preventDefault();try{const body={name:$("h-name").value,category:$("h-cat").value,level:$("h-level").value,state:$("h-state"async function delHotel(id){if(!confirm("¿Eliminar este alojamiento?"))return;try{const r=await fetch(API_URL+"/api/admin/hotels/"+encodeURIComponent(id),document.addEventListener("click",e=>{const d=e.target.closest("[data-del]");if(d)delHotel(d.dataset.del)});
-document.addEventListener("DOMContentLoaded",async()=>{fillLocations();setupPills();await loadHotels();$("checkin").onchange=updateSummary;$("checkout").o
+
+// Base de datos de hoteles
+const hotelesData = [
+  {
+    id: 1,
+    nombre: "Hotel Carmesí Royal",
+    categoria: "Hotel",
+    nivel: "Alta Gama",
+    estado: "Caracas (Distrito Capital)",
+    ciudad: "Chacao",
+    zona: "Altamira",
+    habitaciones: 4,
+    precioOficial: 50,
+    precioOferta: 40,
+    anticipo: 12,
+    pagoRestante: 28,
+    imagen: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: 2,
+    nombre: "Posada Express Carmesí",
+    categoria: "Hotel",
+    nivel: "Económica",
+    estado: "Cojedes",
+    ciudad: "Tinaquillo",
+    zona: "Centro",
+    habitaciones: 8,
+    precioOficial: 25,
+    precioOferta: 25,
+    anticipo: 4,
+    pagoRestante: 21,
+    imagen: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
+let hotelSeleccionado = null;
+let tiempoRestante = 898;
+let timerInterval = null;
+let filtroTipo = "Hoteles";
+let filtroNivel = "Todos";
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarEstados();
+  renderHoteles(hotelesData);
+  setupEvents();
+});
+
+function cargarEstados() {
+  const selectEstado = document.getElementById("selectEstado");
+  if (!selectEstado) return;
+  selectEstado.innerHTML = '<option value="">Todos los Estados</option>';
+  Object.keys(ubicacionesVzla).sort().forEach(estado => {
+    selectEstado.innerHTML += `<option value="${estado}">${estado}</option>`;
+  });
+}
+
+function cargarCiudades() {
+  const estado = document.getElementById("selectEstado").value;
+  const selectCiudad = document.getElementById("selectCiudad");
+  const selectZona = document.getElementById("selectZona");
+  
+  selectCiudad.innerHTML = '<option value="">Todas las Ciudades</option>';
+  selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
+
+  if (estado && ubicacionesVzla[estado]) {
+    Object.keys(ubicacionesVzla[estado]).sort().forEach(ciudad => {
+      selectCiudad.innerHTML += `<option value="${ciudad}">${ciudad}</option>`;
+    });
+  }
+}
+
+function cargarZonas() {
+  const estado = document.getElementById("selectEstado").value;
+  const ciudad = document.getElementById("selectCiudad").value;
+  const selectZona = document.getElementById("selectZona");
+
+  selectZona.innerHTML = '<option value="">Todas las Zonas</option>';
+
+  if (estado && ciudad && ubicacionesVzla[estado][ciudad]) {
+    ubicacionesVzla[estado][ciudad].sort().forEach(zona => {
+      selectZona.innerHTML += `<option value="${zona}">${zona}</option>`;
+    });
+  }
+}
+
+function setupEvents() {
+  document.querySelectorAll(".chip-group button").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const parent = e.target.parentElement;
+      parent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      
+      if (parent.dataset.group === "hospedaje") filtroTipo = e.target.innerText;
+      if (parent.dataset.group === "nivel") filtroNivel = e.target.innerText;
+    });
+  });
+
+  const btnBuscar = document.getElementById("btnBuscar");
+  if (btnBuscar) {
+    btnBuscar.addEventListener("click", () => {
+      const estado = document.getElementById("selectEstado").value;
+      const ciudad = document.getElementById("selectCiudad").value;
+      const zona = document.getElementById("selectZona").value;
+
+      const filtrados = hotelesData.filter(h => {
+        const matchTipo = (filtroTipo === "Hoteles" && h.categoria === "Hotel") ||
+                          (filtroTipo === "Resorts" && h.categoria === "Resort") ||
+                          (filtroTipo === "Moteles" && h.categoria === "Motel");
+        const matchNivel = filtroNivel === "Todos" || h.nivel === filtroNivel;
+        const matchEstado = !estado || h.estado === estado;
+        const matchCiudad = !ciudad || h.ciudad === ciudad;
+        const matchZona = !zona || h.zona === zona;
+
+        return matchTipo && matchNivel && matchEstado && matchCiudad && matchZona;
+      });
+
+      renderHoteles(filtrados);
+    });
+  }
+}
+
+function renderHoteles(lista) {
+  const container = document.getElementById("contenedorHoteles");
+  const noResults = document.getElementById("noResults");
+  if (!container) return;
+  
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    if (noResults) noResults.style.display = "block";
+    return;
+  }
+  if (noResults) noResults.style.display = "none";
+
+  lista.forEach(h => {
+    const card = document.createElement("div");
+    card.className = "hotel-card";
+    card.innerHTML = `
+      <img src="${h.imagen}" alt="${h.nombre}">
+      <div class="card-body">
+        <div class="badges">
+          <span class="badge badge-blue">Disponible (${h.habitaciones} habs)</span>
+          <span class="badge badge-green">${h.nivel}</span>
+        </div>
+        <h3>${h.nombre}</h3>
+        <p style="font-size: 0.85rem; color: #ddd; margin-top: 4px;">📍 ${h.ciudad}, ${h.estado} (${h.zona})</p>
+        
+        <div class="price-box">
+          <p class="old-price">Precio Oficial: USD $${h.precioOficial} (0% desc.)</p>
+          <p class="new-price">Precio Oferta: USD $${h.precioOferta} / noche</p>
+          <p class="sub-price">💳 Anticipo Reserva App: USD $${h.anticipo}</p>
+          <p class="sub-price">🏨 Pago Restante en Hotel: USD $${h.pagoRestante}</p>
+        </div>
+
+        <button class="btn-reservar" onclick="abrirModalPago(${h.id})">Reservar Ahora 🏨</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function abrirModalPago(id) {
+  hotelSeleccionado = hotelesData.find(h => h.id === id);
+  document.getElementById("modalHotelName").innerText = hotelSeleccionado.nombre;
+  document.getElementById("modalMonto").innerText = `Anticipo: USD $${hotelSeleccionado.anticipo} (al cambio BCV)`;
+  document.getElementById("modalPago").style.display = "flex";
+  iniciarContador();
+}
+
+function cerrarModal() {
+  document.getElementById("modalPago").style.display = "none";
+  clearInterval(timerInterval);
+}
+
+function iniciarContador() {
+  clearInterval(timerInterval);
+  tiempoRestante = 898;
+  const timerDisplay = document.getElementById("timerDisplay");
+
+  timerInterval = setInterval(() => {
+    const mins = Math.floor(tiempoRestante / 60);
+    const secs = tiempoRestante % 60;
+    timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    if (tiempoRestante <= 0) {
+      clearInterval(timerInterval);
+      alert("El tiempo para realizar la reserva ha expirado.");
+      cerrarModal();
+    }
+    tiempoRestante--;
+  }, 1000);
+}
+
+function copiarTexto(texto) {
+  navigator.clipboard.writeText(texto);
+  alert("Copiado al portapapeles: " + texto);
+}
+
+function enviarComprobante() {
+  const ref = document.getElementById("inputRef").value;
+  const file = document.getElementById("inputFile").files[0];
+
+  if (!ref || !file) {
+    alert("Por favor ingresa la referencia y selecciona el comprobante.");
+    return;
+  }
+
+  const codigo = "FB-" + Math.floor(100000 + Math.random() * 900000);
+  alert(`¡Comprobante recibido con éxito!\nTu código de reserva temporal es: ${codigo}`);
+  cerrarModal();
+   }
+                   
