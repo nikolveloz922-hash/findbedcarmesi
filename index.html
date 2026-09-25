@@ -1,123 +1,137 @@
-
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090909">
-<title>FindBed Carmesí</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#210008">
+  <title>FindBed Carmesí</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-<header class="topbar">
- <div class="brand"><span class="logo-dot">◆</span><div><b>FindBed</b><small>Carmesí</small></div></div>
- <button id="btn-menu" class="icon-btn">■</button>
-</header>
-<div id="ad" class="ad hidden"></div>
-<main>
-<section id="step-welcome" class="step active">
- <div class="hero">
- <div class="hero-copy">
- <span class="eyebrow">ALOJAMIENTO • RESERVAS</span>
- <h1>Encuentra tu lugar.<br><em>Reserva con Carmesí.</em></h1>
- <p>Hoteles, resorts y moteles con precios promocionales y reserva sencilla.</p>
- <button id="btn-explore" class="primary">Explorar alojamientos </button>
- </div>
- <div class="panda">■</div>
- </div>
-</section>
-<section id="step-search" class="step">
- <div class="section-title"><span>01</span><h2>Buscar disponibilidad</h2></div>
- <div class="categories">
- <button data-cat="Hotel" class="cat active">■ Hotel</button>
- <button data-cat="Resort" class="cat">■ Resort</button>
- <button data-cat="Motel" class="cat">■■ Motel</button>
- </div>
- <div class="filters">
- <label>Estado<select id="estado"><option value="">Todos</option></select></label>
- <label>Ciudad<select id="ciudad"><option value="">Todas</option></select></label>
- <label>Zona<select id="zona"><option value="">Todas</option></select></label>
- <label>Entrada<input id="checkin" type="date"></label>
- <label>Salida<input id="checkout" type="date"></label>
- <label>Huéspedes<input id="guests" type="number" min="1" max="12" value="2"></label>
- </div>
- <button id="btn-search" class="primary wide">Buscar disponibilidad ■</button>
- <div id="hotel-list" class="grid"></div>
-</section>
-<section id="step-detail" class="step">
- <button class="back" data-back="step-search"> Volver</button>
- <div id="detail"></div>
-</section>
-<section id="step-room" class="step">
- <button class="back" data-back="step-detail"> Hotel</button>
- <div class="section-title"><span>03</span><h2>Habitación</h2></div>
- <div id="room-list"></div>
- <button id="btn-room" class="primary wide">Continuar </button>
-</section>
-<section id="step-payment" class="step">
- <button class="back" data-back="step-room"> Habitación</button>
- <div class="section-title"><span>04</span><h2>Datos y pago</h2></div>
- <div id="timer" class="timer">15:00</div>
- <div id="summary" class="summary"></div>
- <form id="payment-form" class="card">
- <label>Nombre completo<input id="pay-name" required></label>
- <label>Cédula / ID<input id="pay-id" required></label>
- <label>Teléfono<input id="pay-phone" required></label>
- <label>Referencia de Pago Móvil<input id="pay-ref" required></label>
- <label>Comprobante<input id="pay-file" type="file" accept="image/jpeg,image/png,image/webp" required></label>
- <button class="primary wide" type="submit">Enviar comprobante ■</button>
- <p id="pay-status" class="status"></p>
- </form>
-</section>
-<section id="step-result" class="step">
- <div class="result-icon">✓</div>
- <h2>Comprobante recibido</h2>
- <p>Tu comprobante fue recibido y analizado. Esto <b>no constituye confirmación bancaria</b> hasta verificar el pago mediante una fuente de pago verifica <div id="result-card" class="card"></div>
- <button id="btn-home" class="primary wide">Volver al inicio</button>
-</section>
-<section id="step-admin" class="step">
- <button class="back" data-back="step-search"> Volver</button>
- <div class="section-title"><span>ADM</span><h2>Administración</h2></div>
- <div id="admin-login" class="card">
- <label>Contraseña<input id="admin-pass" type="password"></label>
- <button id="admin-login-btn" class="primary">Entrar</button>
- </div>
- <div id="admin-panel" class="hidden">
- <form id="hotel-form" class="card">
- <h3>Agregar hotel</h3>
- <input type="hidden" id="hotel-id">
- <label>Nombre<input id="h-name" required></label>
- <label>Categoría<select id="h-cat"><option>Hotel</option><option>Resort</option><option>Motel</option></select></label>
- <label>Estado<input id="h-state" required></label>
- <label>Ciudad<input id="h-city" required></label>
-   <label>Zona<input id="h-zone" required></label>
- <label>Nivel<input id="h-level" value="Alta Gama"></label>
- <label>Precio normal USD<input id="h-normal" type="number" min="0" step=".01" required></label>
- <label>Precio FindBed USD<input id="h-price" type="number" min="0" step=".01" required></label>
- <label>Abono USD<input id="h-deposit" type="number" min="0" step=".01" required></label>
- <label>Habitaciones disponibles<input id="h-rooms" type="number" min="0" value="4" required></label>
- <label>Descripción<textarea id="h-desc"></textarea></label>
- <label>Foto URL<input id="h-photo" placeholder="https://..."></label>
- <button class="primary">Guardar hotel</button>
- </form>
- <div id="admin-hotels"></div>
- </div>
-</section>
-</main>
-<nav id="drawer" class="drawer hidden">
- <button id="close-drawer">×</button>
- <button id="open-admin">■ Administración</button>
- <button id="open-guide">■ Guía FindBed</button>
-</nav>
-<div id="guide" class="modal hidden">
- <div class="modal-card">
- <button id="close-guide">×</button><div class="panda big">■</div>
- <h2>Hola, soy FindBed Carmesí</h2>
- <p>Te guío para buscar, elegir una habitación y enviar tu comprobante.</p>
- <button id="guide-ok" class="primary">Entendido</button>
- </div>
-</div>
-<script src="app.js"></script>
+
+  <!-- Encabezado con imagen oficial -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="Encabezado.jpg" alt="FindBed Carmesí" class="header-img" onerror="this.onerror=null; this.src='banner.jpg';">
+    </div>
+  </header>
+
+  <main>
+    <!-- Portada y Mascota Panda -->
+    <div class="hero-section">
+      <img src="portada.jpg" alt="Portada FindBed" class="img-portada" onerror="this.style.display='none'">
+      <div class="hero-panda">
+        <img id="pandaDinamico" src="panda-normal.png" alt="Panda Carmesí" onerror="this.src='panada-feliz.png'">
+      </div>
+    </div>
+
+    <!-- Panel de Búsqueda Carmesí -->
+    <section class="panel-section">
+      <h2>Tipo de Hospedaje</h2>
+      <div class="chip-group" data-group="hospedaje">
+        <button class="active">Hoteles</button>
+        <button>Resorts</button>
+        <button>Moteles</button>
+      </div>
+
+      <h2>Nivel de Categoría</h2>
+      <div class="chip-group" data-group="nivel">
+        <button class="active">Todos</button>
+        <button>Premium</button>
+        <button>Alta Gama</button>
+        <button>Económica</button>
+      </div>
+
+      <h2>Ubicación en Venezuela</h2>
+      <div class="form-group">
+        <label>Estado</label>
+        <select id="selectEstado" onchange="cargarCiudades()">
+          <option value="">Todos los Estados</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Ciudad</label>
+        <select id="selectCiudad" onchange="cargarZonas()">
+          <option value="">Todas las Ciudades</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Zona</label>
+        <select id="selectZona">
+          <option value="">Todas las Zonas</option>
+        </select>
+      </div>
+
+      <button id="btnBuscar" class="btn-primary-blue">Buscar Disponibilidad 🔍</button>
+    </section>
+
+    <!-- Alerta sin resultados con Panda -->
+    <div id="noResults" class="alert-box">
+      <img src="panda-alerts.png" alt="Alerta" class="panda-mini" onerror="this.style.display='none'">
+      <p>⚠️ No hay opciones disponibles con los filtros seleccionados.</p>
+    </div>
+
+    <!-- Contenedor dinámico de Hoteles -->
+    <div id="contenedorHoteles"></div>
+
+    <!-- Publicidad Destacada Pink Weather -->
+    <section class="panel-section text-center">
+      <p class="pub-title">📢 Publicidad Destacada</p>
+      <img src="Anuncio PinkWeather.jpg" alt="Pink Weather" class="img-pub" onerror="this.style.display='none'">
+    </section>
+  </main>
+
+  <!-- Ventana Modal de Pago Móvil -->
+  <div id="modalPago" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <img src="panda-pago.png" alt="Pago" class="panda-mini" onerror="this.style.display='none'">
+        <h3 class="modal-title">Datos para Pago Móvil</h3>
+      </div>
+      
+      <p class="modal-subtitle">Reservando en: <b id="modalHotelName"></b></p>
+      
+      <div class="bank-row">
+        <span>Banco: <b>0102 - Banco de Venezuela</b></span>
+        <button class="btn-copy" onclick="copiarTexto('0102')">Copiar</button>
+      </div>
+      <div class="bank-row">
+        <span>Cédula: <b>30585882</b></span>
+        <button class="btn-copy" onclick="copiarTexto('30585882')">Copiar</button>
+      </div>
+      <div class="bank-row">
+        <span>Teléfono: <b>0412-0000000</b></span>
+        <button class="btn-copy" onclick="copiarTexto('04120000000')">Copiar</button>
+      </div>
+
+      <p id="modalMonto" class="monto-highlight"></p>
+      <p class="timer-label">Tiempo límite para subir el capture:</p>
+      <div id="timerDisplay" class="timer">14:58</div>
+
+      <div class="form-group">
+        <label>N° de Referencia:</label>
+        <input id="inputRef" type="number" placeholder="Ej: 849204">
+      </div>
+
+      <div class="form-group">
+        <label>Subir foto / captura del Pago Móvil:</label>
+        <input id="inputFile" type="file" accept="image/*">
+      </div>
+
+      <button class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante y Obtener Código 🔑</button>
+      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
 </body>
-</html>
+         </html>
+     
