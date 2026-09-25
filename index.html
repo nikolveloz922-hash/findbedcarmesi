@@ -10,40 +10,61 @@
 </head>
 <body>
 
-  <!-- Encabezado con imagen oficial -->
+  <!-- Encabezado superior -->
   <header class="topbar">
-    <div class="brand">
-      <img src="Encabezado.jpg" alt="FindBed Carmesí" class="header-img" onerror="this.onerror=null; this.src='banner.jpg';">
-    </div>
+    <img src="Encabezado.jpg" alt="FindBed Carmesí" class="header-img" onerror="this.style.display='none'">
   </header>
 
-  <main>
-    <!-- Portada y Mascota Panda -->
-    <div class="hero-section">
-      <img src="portada.jpg" alt="Portada FindBed" class="img-portada" onerror="this.style.display='none'">
-      <div class="hero-panda">
-        <img id="pandaDinamico" src="panda-normal.png" alt="Panda Carmesí" onerror="this.src='panada-feliz.png'">
-      </div>
-    </div>
+  <main class="app-container">
 
-    <!-- Panel de Búsqueda Carmesí -->
-    <section class="panel-section">
-      <h2>Tipo de Hospedaje</h2>
-      <div class="chip-group" data-group="hospedaje">
-        <button class="active">Hoteles</button>
-        <button>Resorts</button>
-        <button>Moteles</button>
+    <!-- PASO 1: Portada Bienvenida -->
+    <section id="step-1" class="step-card active">
+      <div class="hero-section">
+        <img src="portada.jpg" alt="Portada" class="img-portada" onerror="this.style.display='none'">
+        <div class="hero-panda">
+          <img src="panda-normal.png" alt="Panda Carmesí" onerror="this.src='panda-saludando.png'">
+        </div>
+      </div>
+      <h1 class="welcome-title">Bienvenido a FindBed Carmesí</h1>
+      <p class="welcome-sub">Encuentra hospedaje fácil, seguro y sin complicaciones.</p>
+      <button class="btn-primary-blue" onclick="siguientePaso(2)">Comenzar Búsqueda 🚀</button>
+    </section>
+
+    <!-- PASO 2: Selección de Categoría -->
+    <section id="step-2" class="step-card">
+      <div class="step-header">
+        <span class="step-number">Paso 1 de 3</span>
+        <h2>¿Qué tipo de hospedaje buscas?</h2>
+      </div>
+      
+      <div class="category-grid">
+        <button class="cat-card active" onclick="seleccionarCategoria('Hotel', this)">
+          <span>🏨</span>
+          <b>Hoteles</b>
+        </button>
+        <button class="cat-card" onclick="seleccionarCategoria('Resort', this)">
+          <span>🏝️</span>
+          <b>Resorts</b>
+        </button>
+        <button class="cat-card" onclick="seleccionarCategoria('Motel', this)">
+          <span>🚗</span>
+          <b>Moteles</b>
+        </button>
       </div>
 
-      <h2>Nivel de Categoría</h2>
-      <div class="chip-group" data-group="nivel">
-        <button class="active">Todos</button>
-        <button>Premium</button>
-        <button>Alta Gama</button>
-        <button>Económica</button>
+      <div class="nav-buttons">
+        <button class="btn-secondary" onclick="siguientePaso(1)">Atrás</button>
+        <button class="btn-primary-blue" onclick="siguientePaso(3)">Siguiente ➡️</button>
+      </div>
+    </section>
+
+    <!-- PASO 3: Ubicación y Fechas -->
+    <section id="step-3" class="step-card">
+      <div class="step-header">
+        <span class="step-number">Paso 2 de 3</span>
+        <h2>Ubicación y Fechas</h2>
       </div>
 
-      <h2>Ubicación en Venezuela</h2>
       <div class="form-group">
         <label>Estado</label>
         <select id="selectEstado" onchange="cargarCiudades()">
@@ -65,73 +86,101 @@
         </select>
       </div>
 
-      <button id="btnBuscar" class="btn-primary-blue">Buscar Disponibilidad 🔍</button>
+      <div class="dates-grid">
+        <div class="form-group">
+          <label>Entrada</label>
+          <input type="date" id="fechaEntrada">
+        </div>
+        <div class="form-group">
+          <label>Salida</label>
+          <input type="date" id="fechaSalida">
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn-secondary" onclick="siguientePaso(2)">Atrás</button>
+        <button class="btn-primary-blue" onclick="ejecutarBusqueda()">Buscar Disponibilidad 🔍</button>
+      </div>
     </section>
 
-    <!-- Alerta sin resultados con Panda -->
-    <div id="noResults" class="alert-box">
-      <img src="panda-alerts.png" alt="Alerta" class="panda-mini" onerror="this.style.display='none'">
-      <p>⚠️ No hay opciones disponibles con los filtros seleccionados.</p>
-    </div>
+    <!-- PASO 4: Resultados / Catálogo de Hoteles -->
+    <section id="step-4" class="step-card">
+      <div class="step-header">
+        <button class="btn-link" onclick="siguientePaso(3)">← Modificar Búsqueda</button>
+        <h2>Alojamiento Disponible</h2>
+      </div>
 
-    <!-- Contenedor dinámico de Hoteles -->
-    <div id="contenedorHoteles"></div>
+      <div id="noResults" class="alert-box">
+        <img src="panda-alerts.png" alt="Alerta" class="panda-mini" onerror="this.style.display='none'">
+        <p>⚠️ No encontramos alojamientos con estos criterios de búsqueda.</p>
+      </div>
 
-    <!-- Publicidad Destacada Pink Weather -->
-    <section class="panel-section text-center">
-      <p class="pub-title">📢 Publicidad Destacada</p>
-      <img src="Anuncio PinkWeather.jpg" alt="Pink Weather" class="img-pub" onerror="this.style.display='none'">
+      <div id="contenedorHoteles"></div>
+
+      <!-- Publicidad Destacada Pink Weather -->
+      <div class="pub-box">
+        <p class="pub-title">📢 Publicidad Destacada</p>
+        <img src="Anuncio PinkWeather.jpg" alt="Pink Weather" class="img-pub" onerror="this.style.display='none'">
+      </div>
     </section>
+
   </main>
 
-  <!-- Ventana Modal de Pago Móvil -->
+  <!-- Modal de Pago Móvil con Temporizador de 15 Minutos -->
   <div id="modalPago" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
-        <img src="panda-pago.png" alt="Pago" class="panda-mini" onerror="this.style.display='none'">
-        <h3 class="modal-title">Datos para Pago Móvil</h3>
+        <img src="panda-hotel.png" alt="Pago" class="panda-mini" onerror="this.style.display='none'">
+        <h3 class="modal-title">Confirmar Reserva</h3>
       </div>
       
-      <p class="modal-subtitle">Reservando en: <b id="modalHotelName"></b></p>
-      
-      <div class="bank-row">
-        <span>Banco: <b>0102 - Banco de Venezuela</b></span>
-        <button class="btn-copy" onclick="copiarTexto('0102')">Copiar</button>
-      </div>
-      <div class="bank-row">
-        <span>Cédula: <b>30585882</b></span>
-        <button class="btn-copy" onclick="copiarTexto('30585882')">Copiar</button>
-      </div>
-      <div class="bank-row">
-        <span>Teléfono: <b>0412-0000000</b></span>
-        <button class="btn-copy" onclick="copiarTexto('04120000000')">Copiar</button>
+      <p class="modal-subtitle">Hotel: <b id="modalHotelName"></b></p>
+
+      <!-- Regla de Precios Clara (Sección 3 del Plan Maestro) -->
+      <div class="price-breakdown">
+        <div class="p-row"><span>Precio Normal:</span> <s id="pNormal">USD $0</s></div>
+        <div class="p-row highlight"><span>Precio FindBed:</span> <b id="pFindBed">USD $0</b></div>
+        <div class="p-row pay-now"><span>Pagas Ahora (Anticipo):</span> <b id="pAnticipo">USD $0</b></div>
+        <div class="p-row pay-hotel"><span>Saldo en Hotel:</span> <b id="pSaldo">USD $0</b></div>
       </div>
 
-      <p id="modalMonto" class="monto-highlight"></p>
-      <p class="timer-label">Tiempo límite para subir el capture:</p>
-      <div id="timerDisplay" class="timer">14:58</div>
+      <div class="bank-box">
+        <p class="bank-title">💳 Datos para Pago Móvil</p>
+        <div class="bank-row">
+          <span>Banco: <b>0102 - BDV</b></span>
+          <button class="btn-copy" onclick="copiarTexto('0102')">Copiar</button>
+        </div>
+        <div class="bank-row">
+          <span>Cédula: <b>30585882</b></span>
+          <button class="btn-copy" onclick="copiarTexto('30585882')">Copiar</button>
+        </div>
+        <div class="bank-row">
+          <span>Teléfono: <b>0412-0000000</b></span>
+          <button class="btn-copy" onclick="copiarTexto('04120000000')">Copiar</button>
+        </div>
+      </div>
+
+      <div class="timer-box">
+        <p class="timer-label">Tiempo límite para tu reserva:</p>
+        <div id="timerDisplay" class="timer">15:00</div>
+      </div>
 
       <div class="form-group">
-        <label>N° de Referencia:</label>
+        <label>N° de Referencia Bancaria:</label>
         <input id="inputRef" type="number" placeholder="Ej: 849204">
       </div>
 
       <div class="form-group">
-        <label>Subir foto / captura del Pago Móvil:</label>
+        <label>Comprobante (Captura de pantalla):</label>
         <input id="inputFile" type="file" accept="image/*">
       </div>
 
-      <button class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante y Obtener Código 🔑</button>
+      <button id="btnEnviarPago" class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante 🔑</button>
       <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
     </div>
   </div>
 
   <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
-  </script>
 </body>
-         </html>
-     
+            </html>
+  
