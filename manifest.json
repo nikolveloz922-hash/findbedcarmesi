@@ -1,2 +1,21 @@
-
-{"name":"FindBed Carmesí","short_name":"FindBed","start_url":"./index.html","display":"standalone","background_color":"#210008","theme_color":"#790d2b","d
+{
+  "short_name": "FindBed",
+  "name": "FindBed Carmesí",
+  "icons": [
+    {
+      "src": "panda-normal.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "panda-celebrando.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#1a0005",
+  "theme_color": "#210008",
+  "display": "standalone",
+  "orientation": "portrait"
+}
