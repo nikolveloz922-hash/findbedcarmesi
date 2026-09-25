@@ -1,0 +1,85 @@
+
+{
+  "configuracion": {
+    "nombreApp": "FindBed Carmesí",
+    "version": "1.0.0",
+    "tiempoLimiteReservaMinutos": 15,
+    "pagoMovil": {
+      "banco": "0102 - Banco de Venezuela",
+      "cedula": "V-30585882",
+      "telefono": "0412-0000000"
+    }
+  },
+  "alojamientos": [
+    {
+      "id": 1,
+      "nombre": "Hotel Carmesí Royal",
+      "categoria": "Hoteles",
+      "estado": "Caracas (Distrito Capital)",
+      "ciudad": "Chacao",
+      "zona": "Altamira",
+      "precioNormal": 80,
+      "precioFindBed": 70,
+      "anticipo": 10,
+      "saldoHotel": 60,
+      "imagen": "hotel1_habitacion.jpg",
+      "disponible": true
+    },
+    {
+      "id": 2,
+      "nombre": "Posada Express Carmesí",
+      "categoria": "Estándar",
+      "estado": "Cojedes",
+      "ciudad": "Tinaquillo",
+      "zona": "Centro",
+      "precioNormal": 35,
+      "precioFindBed": 25,
+      "anticipo": 5,
+      "saldoHotel": 20,
+      "imagen": "hotel1_piscina.jpg",
+      "disponible": true
+    },
+    {
+      "id": 3,
+      "nombre": "Margarita Beach Resort",
+      "categoria": "Resorts",
+      "estado": "Nueva Esparta",
+      "ciudad": "Pampatar",
+      "zona": "Bahía de Pampatar",
+      "precioNormal": 120,
+      "precioFindBed": 100,
+      "anticipo": 15,
+      "saldoHotel": 85,
+      "imagen": "hotel1_habitacion.jpg",
+      "disponible": true
+    },
+    {
+      "id": 4,
+      "nombre": "Motel Sweet Carmesí",
+      "categoria": "Moteles",
+      "estado": "Caracas (Distrito Capital)",
+      "ciudad": "Baruta",
+      "zona": "Las Mercedes",
+      "precioNormal": 45,
+      "precioFindBed": 35,
+      "anticipo": 5,
+      "saldoHotel": 30,
+      "imagen": "hotel1_piscina.jpg",
+      "disponible": true
+    },
+    {
+      "id": 5,
+      "nombre": "Suite Carmesí Deluxe",
+      "categoria": "Suite",
+      "estado": "Caracas (Distrito Capital)",
+      "ciudad": "Chacao",
+      "zona": "La Castellana",
+      "precioNormal": 150,
+      "precioFindBed": 130,
+      "anticipo": 20,
+      "saldoHotel": 110,
+      "imagen": "hotel1_habitacion.jpg",
+      "disponible": true
+    }
+  ]
+}
