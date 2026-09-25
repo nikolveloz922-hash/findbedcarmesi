@@ -1,6 +1,6 @@
 const CACHE_NAME = 'findbed-carmesi-v1';
 
-// Archivos esenciales que se guardan en la memoria del dispositivo
+// Lista de todos los archivos de tu proyecto que se guardarán en la memoria del teléfono
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,17 +8,18 @@ const ASSETS_TO_CACHE = [
   './script.js',
   './manifest.json',
   './datos.json',
-  './fondo.jpg',
-  './portada.jpg',
+  './sw.js',
   './Encabezado.jpg',
   './panda-normal.png',
   './panda-saludando.png',
-  './panda-hotel.png',
-  './panda-alerts.png',
-  './Anuncio PinkWeather.jpg'
+  './panda-revisando.png',
+  './panda-exito.png',
+  './panda-error.png',
+  './hotel1_habitacion.jpg',
+  './hotel1_piscina.jpg'
 ];
 
-// Instalación del Service Worker
+// Instalación del Service Worker y guardado en caché
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -27,7 +28,7 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Activación y limpieza de cachés antiguas
+// Activación del Service Worker y limpieza de caché antigua
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -42,7 +43,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Estrategia: Buscar en red primero, si falla o no hay datos, cargar desde el Caché
+// Intercepción de peticiones para que la app responda incluso sin señal
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request).catch(() => {
@@ -50,3 +51,4 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+              
