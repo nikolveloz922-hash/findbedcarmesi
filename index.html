@@ -1,186 +1,178 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#210008">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FindBed Carmesí</title>
-  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="estilos.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-  <!-- Encabezado superior -->
-  <header class="topbar">
-    <img src="Encabezado.jpg" alt="FindBed Carmesí" class="header-img" onerror="this.style.display='none'">
+  <!-- ENCABEZADO -->
+  <header class="main-header">
+    <img src="Encabezado.jpg" alt="FindBed Carmesí Banner" class="banner-img">
   </header>
 
-  <main class="app-container">
+  <main class="container">
 
-    <!-- PASO 1: Portada Bienvenida -->
+    <!-- PASO 1: CATEGORÍAS Y TUTORIAL PANDA -->
     <section id="step-1" class="step-card active">
-      <div class="hero-section">
-        <img src="portada.jpg" alt="Portada" class="img-portada" onerror="this.style.display='none'">
-        <div class="hero-panda">
-          <img src="panda-normal.png" alt="Panda Carmesí" onerror="this.src='panda-saludando.png'">
+      
+      <!-- Tutorial Panda Interactivo -->
+      <div id="pandaHeroContainer" class="panda-tutorial-box">
+        <div class="panda-speech">
+          <p id="pandaBubbleText">¡Hola! Soy tu asistente Carmesí 🐼. Te enseñaré a reservar en 3 sencillos pasos.</p>
+          <button id="btnPandaTutorial" class="btn-bubble" onclick="avanzarTutorial()">Siguiente ➡️</button>
+        </div>
+        <div class="panda-avatar">
+          <img src="panda-saludando.png" alt="Panda Asistente" onerror="this.src='panda-normal.png'">
+          <button class="btn-minimize-panda" onclick="minimizarPanda()">✕ Ocultar</button>
         </div>
       </div>
-      <h1 class="welcome-title">Bienvenido a FindBed Carmesí</h1>
-      <p class="welcome-sub">Encuentra hospedaje fácil, seguro y sin complicaciones.</p>
-      <button class="btn-primary-blue" onclick="siguientePaso(2)">Comenzar Búsqueda 🚀</button>
-    </section>
 
-    <!-- PASO 2: Selección de Categoría -->
-    <section id="step-2" class="step-card">
-      <div class="step-header">
-        <span class="step-number">Paso 1 de 3</span>
-        <h2>¿Qué tipo de hospedaje buscas?</h2>
-      </div>
-      
+      <h2>1. Elige el Tipo de Hospedaje</h2>
       <div class="category-grid">
-        <button class="cat-card active" onclick="seleccionarCategoria('Hotel', this)">
+        <button class="cat-card active" data-category="Hoteles">
           <span>🏨</span>
           <b>Hoteles</b>
         </button>
-        <button class="cat-card" onclick="seleccionarCategoria('Resort', this)">
+        <button class="cat-card" data-category="Resorts">
           <span>🏝️</span>
           <b>Resorts</b>
         </button>
-        <button class="cat-card" onclick="seleccionarCategoria('Motel', this)">
+        <button class="cat-card" data-category="Moteles">
           <span>🚗</span>
           <b>Moteles</b>
         </button>
+        <button class="cat-card" data-category="Estándar">
+          <span>🏡</span>
+          <b>Estándar</b>
+        </button>
+        <button class="cat-card" data-category="Suite">
+          <span>👑</span>
+          <b>Suite</b>
+        </button>
       </div>
 
-      <div class="nav-buttons">
-        <button class="btn-secondary" onclick="siguientePaso(1)">Atrás</button>
-        <button class="btn-primary-blue" onclick="siguientePaso(3)">Siguiente ➡️</button>
-      </div>
+      <button class="btn-primary-red" onclick="siguientePaso(2)">Continuar a Ubicación ➡️</button>
     </section>
 
-    <!-- PASO 3: Ubicación y Fechas -->
-    <section id="step-3" class="step-card">
-      <div class="step-header">
-        <span class="step-number">Paso 2 de 3</span>
-        <h2>Ubicación y Fechas</h2>
-      </div>
-
+    <!-- PASO 2: UBICACIÓN COMPLETA -->
+    <section id="step-2" class="step-card">
+      <h2>2. Selecciona la Ubicación</h2>
+      
       <div class="form-group">
-        <label>Estado</label>
+        <label for="selectEstado">Estado:</label>
         <select id="selectEstado" onchange="cargarCiudades()">
           <option value="">Todos los Estados</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Ciudad</label>
+        <label for="selectCiudad">Ciudad:</label>
         <select id="selectCiudad" onchange="cargarZonas()">
           <option value="">Todas las Ciudades</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Zona</label>
+        <label for="selectZona">Zona / Sector:</label>
         <select id="selectZona">
           <option value="">Todas las Zonas</option>
         </select>
       </div>
 
-      <div class="dates-grid">
-        <div class="form-group">
-          <label>Entrada</label>
-          <input type="date" id="fechaEntrada">
-        </div>
-        <div class="form-group">
-          <label>Salida</label>
-          <input type="date" id="fechaSalida">
-        </div>
-      </div>
-
-      <div class="nav-buttons">
-        <button class="btn-secondary" onclick="siguientePaso(2)">Atrás</button>
-        <button class="btn-primary-blue" onclick="ejecutarBusqueda()">Buscar Disponibilidad 🔍</button>
+      <div class="button-group">
+        <button class="btn-secondary" onclick="siguientePaso(1)">⬅️ Volver</button>
+        <button class="btn-primary-red" onclick="siguientePaso(3)">Continuar a Fechas ➡️</button>
       </div>
     </section>
 
-    <!-- PASO 4: Resultados / Catálogo de Hoteles -->
+    <!-- PASO 3: FECHAS Y BÚSQUEDA -->
+    <section id="step-3" class="step-card">
+      <h2>3. Selecciona tus Fechas</h2>
+      
+      <div class="form-group">
+        <label for="fechaEntrada">Fecha de Entrada:</label>
+        <input type="date" id="fechaEntrada">
+      </div>
+
+      <div class="form-group">
+        <label for="fechaSalida">Fecha de Salida:</label>
+        <input type="date" id="fechaSalida">
+      </div>
+
+      <div class="button-group">
+        <button class="btn-secondary" onclick="siguientePaso(2)">⬅️ Volver</button>
+        <button class="btn-primary-red" onclick="ejecutarBusqueda()">Buscar Alojamientos 🔍</button>
+      </div>
+    </section>
+
+    <!-- PASO 4: RESULTADOS -->
     <section id="step-4" class="step-card">
-      <div class="step-header">
-        <button class="btn-link" onclick="siguientePaso(3)">← Modificar Búsqueda</button>
-        <h2>Alojamiento Disponible</h2>
-      </div>
-
-      <div id="noResults" class="alert-box">
-        <img src="panda-alerts.png" alt="Alerta" class="panda-mini" onerror="this.style.display='none'">
-        <p>⚠️ No encontramos alojamientos con estos criterios de búsqueda.</p>
-      </div>
-
-      <div id="contenedorHoteles"></div>
-
-      <!-- Publicidad Destacada Pink Weather -->
-      <div class="pub-box">
-        <p class="pub-title">📢 Publicidad Destacada</p>
-        <img src="Anuncio PinkWeather.jpg" alt="Pink Weather" class="img-pub" onerror="this.style.display='none'">
-      </div>
+      <h2>Alojamientos Disponibles</h2>
+      <div id="contenedorHoteles" class="hotels-grid"></div>
+      <p id="noResults" style="display:none; text-align:center; padding: 20px;">No se encontraron alojamientos para este filtro.</p>
+      <button class="btn-secondary" onclick="siguientePaso(1)" style="margin-top:15px;">Nueva Búsqueda 🔄</button>
     </section>
 
   </main>
 
-  <!-- Modal de Pago Móvil con Temporizador de 15 Minutos -->
-  <div id="modalPago" class="modal-overlay">
+  <!-- BOTÓN FLOTANTE DEL PANDA EN LA ESQUINA -->
+  <div id="pandaFloatingBtn" class="panda-float-corner" onclick="reabrirPanda()">
+    <img src="panda-normal.png" alt="Ayuda Panda">
+    <span>¿Ayuda?</span>
+  </div>
+
+  <!-- MODAL DE PAGO Y VERIFICACIÓN -->
+  <div id="modalPago" class="modal-overlay" style="display:none;">
     <div class="modal-content">
-      <div class="modal-header">
-        <img src="panda-hotel.png" alt="Pago" class="panda-mini" onerror="this.style.display='none'">
-        <h3 class="modal-title">Confirmar Reserva</h3>
-      </div>
+      <span class="close-btn" onclick="cerrarModal()">&times;</span>
       
-      <p class="modal-subtitle">Hotel: <b id="modalHotelName"></b></p>
+      <h3 id="modalHotelName">Reserva de Alojamiento</h3>
+      <p class="timer-text">⏰ Tiempo para reservar: <span id="timerDisplay">15:00</span></p>
 
-      <!-- Regla de Precios Clara (Sección 3 del Plan Maestro) -->
-      <div class="price-breakdown">
-        <div class="p-row"><span>Precio Normal:</span> <s id="pNormal">USD $0</s></div>
-        <div class="p-row highlight"><span>Precio FindBed:</span> <b id="pFindBed">USD $0</b></div>
-        <div class="p-row pay-now"><span>Pagas Ahora (Anticipo):</span> <b id="pAnticipo">USD $0</b></div>
-        <div class="p-row pay-hotel"><span>Saldo en Hotel:</span> <b id="pSaldo">USD $0</b></div>
+      <!-- Resumen de Precios -->
+      <div class="price-summary">
+        <p>Precio Normal: <span id="pNormal">USD $0</span></p>
+        <p><strong>Precio FindBed: <span id="pFindBed">USD $0</span></strong></p>
+        <p class="highlight">Anticipo Pago Móvil: <span id="pAnticipo">USD $0</span></p>
+        <p>Restante a pagar en Hotel: <span id="pSaldo">USD $0</span></p>
       </div>
 
-      <div class="bank-box">
-        <p class="bank-title">💳 Datos para Pago Móvil</p>
-        <div class="bank-row">
-          <span>Banco: <b>0102 - BDV</b></span>
-          <button class="btn-copy" onclick="copiarTexto('0102')">Copiar</button>
+      <!-- Datos de Pago Móvil -->
+      <div class="pago-movil-info">
+        <h4>Datos para Pago Móvil (Venezuela)</h4>
+        <p><strong>Banco:</strong> 0102 - Banco de Venezuela</p>
+        <p><strong>Cédula:</strong> V-30585882 <button class="btn-copy" onclick="copiarTexto('30585882')">📋</button></p>
+        <p><strong>Teléfono:</strong> 0412-0000000 <button class="btn-copy" onclick="copiarTexto('04120000000')">📋</button></p>
+      </div>
+
+      <!-- Formulario de Entrada -->
+      <div id="pagoFormBox">
+        <div class="form-group">
+          <label for="inputRef">N° de Referencia Bancaria:</label>
+          <input id="inputRef" type="number" placeholder="Ej: 849204">
         </div>
-        <div class="bank-row">
-          <span>Cédula: <b>30585882</b></span>
-          <button class="btn-copy" onclick="copiarTexto('30585882')">Copiar</button>
+        <div class="form-group">
+          <label for="inputFile">Comprobante (Captura):</label>
+          <input id="inputFile" type="file" accept="image/*">
         </div>
-        <div class="bank-row">
-          <span>Teléfono: <b>0412-0000000</b></span>
-          <button class="btn-copy" onclick="copiarTexto('04120000000')">Copiar</button>
-        </div>
+        <button class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante 🔑</button>
       </div>
 
-      <div class="timer-box">
-        <p class="timer-label">Tiempo límite para tu reserva:</p>
-        <div id="timerDisplay" class="timer">15:00</div>
+      <!-- Estado de Verificación con Panda -->
+      <div id="pagoStatusBox" style="display:none; text-align:center; padding: 15px;">
+        <img id="imgPandaStatus" src="panda-revisando.png" style="width: 100px; margin-bottom: 10px;" alt="Panda Estado">
+        <p id="txtPandaStatus" style="font-size: 0.9rem; margin-bottom: 10px;"></p>
+        <div id="codePandaStatus" class="code-box" style="display:none;"></div>
+        <button class="btn-secondary" onclick="cerrarModal()" style="margin-top: 15px;">Cerrar</button>
       </div>
 
-      <div class="form-group">
-        <label>N° de Referencia Bancaria:</label>
-        <input id="inputRef" type="number" placeholder="Ej: 849204">
-      </div>
-
-      <div class="form-group">
-        <label>Comprobante (Captura de pantalla):</label>
-        <input id="inputFile" type="file" accept="image/*">
-      </div>
-
-      <button id="btnEnviarPago" class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante 🔑</button>
-      <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
-            </html>
-  
+</html>
