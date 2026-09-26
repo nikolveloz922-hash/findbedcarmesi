@@ -1,324 +1,51 @@
-:root {
-  --primary-carmesi: #900c3f;
-  --dark-carmesi: #581845;
-  --light-bg: #121212;
-  --card-bg: #1e1e1e;
-  --text-light: #ffffff;
-  --accent-gold: #ffc300;
-  --accent-blue: #007bff;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--light-bg);
-  color: var(--text-light);
-}
-
-.main-header .banner-img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  display: block;
-}
-
-.container {
-  padding: 15px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.step-card {
-  display: none;
-  background-color: var(--card-bg);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  margin-bottom: 20px;
-}
-
-.step-card.active {
-  display: block;
-}
-
-/* TUTORIAL PANDA INTERACTIVO */
-.panda-tutorial-box {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
-  border: 2px solid var(--primary-carmesi);
-  border-radius: 12px;
+/* ANUNCIOS BANNERS */
+.ad-banner-box {
+  margin: 15px 0;
   padding: 12px;
-  margin-bottom: 15px;
-  gap: 10px;
+  background: #111;
+  border: 1px dashed #ffc300;
+  border-radius: 8px;
+  text-align: center;
 }
 
-.panda-speech {
-  flex: 1;
-}
-
-.panda-speech p {
-  font-size: 0.85rem;
-  margin: 0 0 8px 0;
-}
-
-.btn-bubble {
-  background: var(--accent-gold);
-  border: none;
-  color: #000;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.panda-avatar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 80px;
-}
-
-.panda-avatar img {
-  width: 65px;
-  height: 65px;
-  object-fit: contain;
-}
-
-.btn-minimize-panda {
-  background: transparent;
-  border: none;
-  color: #ff4d4d;
+.ad-label {
   font-size: 0.65rem;
-  cursor: pointer;
-  margin-top: 4px;
+  color: #888;
+  margin: 0 0 5px 0;
+  letter-spacing: 1px;
 }
 
-/* PANDA FLOTANTE EN LA ESQUINA */
+.ad-content {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  color: #ffc300;
+  font-weight: bold;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* BOTÓN FLOTANTE PANDA Y TUTORIAL */
 .panda-float-corner {
-  display: none;
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: var(--primary-carmesi);
+  background: #900c3f;
+  color: #fff;
   padding: 8px 12px;
-  border-radius: 30px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  border-radius: 25px;
+  display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   z-index: 99;
 }
 
 .panda-float-corner img {
-  width: 35px;
-  height: 35px;
-}
-
-.panda-float-corner span {
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-/* CUADRÍCULA DE CATEGORÍAS */
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 15px 0;
-}
-
-.cat-card {
-  background-color: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 12px 5px;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.cat-card span {
-  font-size: 1.5rem;
-}
-
-.cat-card b {
-  font-size: 0.75rem;
-  margin-top: 5px;
-}
-
-.cat-card.active {
-  background-color: var(--primary-carmesi);
-  border-color: var(--accent-gold);
-}
-
-/* FORMULARIOS Y BOTONES */
-.form-group {
-  margin-bottom: 12px;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-size: 0.8rem;
-  margin-bottom: 4px;
-  color: #ccc;
-}
-
-.form-group select, .form-group input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background-color: #2b2b2b;
-  color: #fff;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.btn-primary-red {
-  width: 100%;
-  background-color: var(--primary-carmesi);
-  color: #fff;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-primary-blue {
-  width: 100%;
-  background-color: var(--accent-blue);
-  color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  width: 100%;
-  background-color: #444;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* TARJETAS DE HOTELES */
-.hotels-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.hotel-card {
-  background: #282828;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #333;
-}
-
-.hotel-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-
-.hotel-card .card-body {
-  padding: 12px;
-}
-
-.hotel-card h3 {
-  margin: 0 0 5px 0;
-  font-size: 1rem;
-}
-
-.price-box {
-  background: #1f1f1f;
-  padding: 8px;
-  border-radius: 6px;
-  margin: 8px 0;
-}
-
-.old-price { font-size: 0.75rem; color: #888; text-decoration: line-through; margin: 0; }
-.new-price { font-size: 0.9rem; color: var(--accent-gold); font-weight: bold; margin: 2px 0; }
-.sub-price { font-size: 0.75rem; color: #bbb; margin: 0; }
-
-/* MODAL */
-.modal-overlay {
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 15px;
-}
-
-.modal-content {
-  background: #222;
-  border-radius: 10px;
-  padding: 20px;
-  width: 100%;
-  max-width: 450px;
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px; right: 15px;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.price-summary, .pago-movil-info {
-  background: #181818;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  font-size: 0.8rem;
-}
-
-.btn-copy {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.btn-confirm {
-  width: 100%;
-  background: #22c55e;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.code-box {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #22c55e;
-  background: rgba(34,197,94,0.1);
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
