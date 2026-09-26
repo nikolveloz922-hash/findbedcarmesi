@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - FindBed Carmesí</title>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .admin-container { max-width: 800px; margin: 20px auto; padding: 20px; background: #1a1a1a; border-radius: 10px; border: 1px solid #333; }
+    .form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .form-row input, .form-row select { flex: 1; min-width: 140px; padding: 10px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 5px; }
+    .table-admin { width: 100%; border-collapse: collapse; margin-top: 20px; color: #fff; }
+    .table-admin th, .table-admin td { padding: 10px; border: 1px solid #333; text-align: left; font-size: 0.85rem; }
+    .table-admin th { background: #900c3f; }
+  </style>
+</head>
+<body>
+
+  <!-- CANDADO DE ACCESO -->
+  <div id="loginBox" class="admin-container text-center">
+    <h2>🔒 Acceso Administrativo</h2>
+    <p style="color:#aaa; font-size:0.85rem; margin-bottom:20px;">Ingresa para cambiar precios y alojamientos</p>
+    <div style="max-width:300px; margin:0 auto 15px auto;">
+      <input type="text" id="adminUser" placeholder="Usuario" style="width:100%; padding:10px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:5px;">
+    </div>
+    <div style="max-width:300px; margin:0 auto 20px auto;">
+      <input type="password" id="adminPass" placeholder="Contraseña" style="width:100%; padding:10px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:5px;">
+    </div>
+    <button class="btn-primary-red" onclick="iniciarSesionAdmin()">Ingresar al Panel 🔑</button>
+  </div>
+
+  <!-- PANEL DE CONTROL -->
+  <div id="panelBox" class="admin-container" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <h2>⚙️ Panel de Control</h2>
+      <button class="btn-secondary" onclick="cerrarSesionAdmin()">Cerrar Sesión 🔒</button>
+    </div>
+
+    <h3>➕ Agregar / Cambiar Alojamiento y Precios</h3>
+    <div class="form-row">
+      <input type="text" id="hNombre" placeholder="Nombre del Hotel">
+      <select id="hTipo">
+        <option value="Hotel">Hotel</option>
+        <option value="Motel">Motel</option>
+        <option value="Resort">Resort</option>
+        <option value="Posada">Posada</option>
+      </select>
+      <select id="hNivel">
+        <option value="Básica">Básica</option>
+        <option value="Estándar">Estándar</option>
+        <option value="Premium">Premium</option>
+        <option value="Suite">Suite</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <input type="text" id="hEstado" placeholder="Estado (Ej: Cojedes)">
+      <input type="text" id="hCiudad" placeholder="Ciudad (Ej: Tinaquillo)">
+      <input type="text" id="hZona" placeholder="Zona (Ej: Centro)">
+    </div>
+
+    <div class="form-row">
+      <input type="number" id="hPrecioNormal" placeholder="Precio Normal ($)">
+      <input type="number" id="hPrecioFindBed" placeholder="Precio FindBed ($)">
+      <input type="number" id="hAnticipo" placeholder="Anticipo Pago Móvil ($)">
+    </div>
+
+    <button class="btn-primary-red" style="width:100%; margin-top:10px;" onclick="guardarHotelAdmin()">Guardar Alojamiento 💾</button>
+
+    <hr style="border-color:#333; margin:25px 0;">
+
+    <h3>📋 Alojamientos Activos</h3>
+    <table class="table-admin">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Ubicación</th>
+          <th>Precio</th>
+          <th>Anticipo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tablaHotelesBody">
+        <tr><td colspan="5" style="text-align:center;">Cargando alojamientos...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function iniciarSesionAdmin() {
+      const u = document.getElementById("adminUser").value;
+      const p = document.getElementById("adminPass").value;
+
+      if (u === "admin" && p === "carmesi2026") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("panelBox").style.display = "block";
+      } else {
+        alert("Usuario o contraseña incorrectos ❌");
+      }
+    }
+
+    function cerrarSesionAdmin() {
+      document.getElementById("loginBox").style.display = "block";
+      document.getElementById("panelBox").style.display = "none";
+    }
+
+    function guardarHotelAdmin() {
+      alert("¡Alojamiento guardado exitosamente!");
+    }
+  </script>
+</body>
+</html>
