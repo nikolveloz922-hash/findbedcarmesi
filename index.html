@@ -5,62 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FindBed Carmesí</title>
   <link rel="stylesheet" href="estilos.css">
-  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-  <!-- ENCABEZADO -->
-  <header class="main-header">
-    <img src="Encabezado.jpg" alt="FindBed Carmesí Banner" class="banner-img">
-  </header>
-
   <main class="container">
 
-    <!-- PASO 1: CATEGORÍAS Y TUTORIAL PANDA -->
-    <section id="step-1" class="step-card active">
-      
-      <!-- Tutorial Panda Interactivo -->
-      <div id="pandaHeroContainer" class="panda-tutorial-box">
-        <div class="panda-speech">
-          <p id="pandaBubbleText">¡Hola! Soy tu asistente Carmesí 🐼. Te enseñaré a reservar en 3 sencillos pasos.</p>
-          <button id="btnPandaTutorial" class="btn-bubble" onclick="avanzarTutorial()">Siguiente ➡️</button>
-        </div>
-        <div class="panda-avatar">
-          <img src="panda-saludando.png" alt="Panda Asistente" onerror="this.src='panda-normal.png'">
-          <button class="btn-minimize-panda" onclick="minimizarPanda()">✕ Ocultar</button>
-        </div>
+    <!-- PORTADA DE INICIO -->
+    <section id="step-0" class="step-card active text-center">
+      <div class="welcome-header">
+        <img src="Encabezado.jpg" alt="FindBed Carmesí" class="banner-img-welcome" onerror="this.src='https://via.placeholder.com/800x300?text=FindBed+Carmes%C3%AD'">
+        <h1>FindBed Carmesí</h1>
+        <p class="tagline">Encuentra y reserva tu hospedaje ideal en Venezuela al mejor precio.</p>
       </div>
 
-      <h2>1. Elige el Tipo de Hospedaje</h2>
-      <div class="category-grid">
-        <button class="cat-card active" data-category="Hoteles">
-          <span>🏨</span>
-          <b>Hoteles</b>
-        </button>
-        <button class="cat-card" data-category="Resorts">
-          <span>🏝️</span>
-          <b>Resorts</b>
-        </button>
-        <button class="cat-card" data-category="Moteles">
-          <span>🚗</span>
-          <b>Moteles</b>
-        </button>
-        <button class="cat-card" data-category="Estándar">
-          <span>🏡</span>
-          <b>Estándar</b>
-        </button>
-        <button class="cat-card" data-category="Suite">
-          <span>👑</span>
-          <b>Suite</b>
-        </button>
+      <!-- ANUNCIO GRANDE EN PORTADA -->
+      <div class="ad-banner-box">
+        <p class="ad-label">PUBLICIDAD / ANUNCIO</p>
+        <div class="ad-content">📢 Espacio Publicitario Destacado</div>
       </div>
 
-      <button class="btn-primary-red" onclick="siguientePaso(2)">Continuar a Ubicación ➡️</button>
+      <button class="btn-primary-red btn-lg" style="margin-top:20px;" onclick="iniciarExperiencia()">Comenzar Búsqueda 🚀</button>
     </section>
 
-    <!-- PASO 2: UBICACIÓN COMPLETA -->
+    <!-- PASO 1: TIPO Y CATEGORÍA -->
+    <section id="step-1" class="step-card">
+      
+      <!-- Bloque A: Tipo -->
+      <div id="block-tipo">
+        <h2>1. Selecciona el Tipo de Establecimiento</h2>
+        <div class="category-grid">
+          <button class="cat-card" onclick="seleccionarTipo('Hotel', this)"><span>🏨</span><b>Hotel</b></button>
+          <button class="cat-card" onclick="seleccionarTipo('Motel', this)"><span>🚗</span><b>Motel</b></button>
+          <button class="cat-card" onclick="seleccionarTipo('Resort', this)"><span>🏝️</span><b>Resort</b></button>
+          <button class="cat-card" onclick="seleccionarTipo('Posada', this)"><span>🏡</span><b>Posada</b></button>
+        </div>
+      </div>
+
+      <!-- Bloque B: Categoría / Nivel -->
+      <div id="block-categoria" style="display: none; margin-top: 20px;">
+        <h2>2. Selecciona el Nivel / Categoría</h2>
+        <div class="category-grid">
+          <button class="cat-card" onclick="seleccionarNivel('Básica', this)"><span>🛏️</span><b>Básica</b></button>
+          <button class="cat-card" onclick="seleccionarNivel('Estándar', this)"><span>⭐</span><b>Estándar</b></button>
+          <button class="cat-card" onclick="seleccionarNivel('Premium', this)"><span>🌟</span><b>Premium</b></button>
+          <button class="cat-card" onclick="seleccionarNivel('Suite', this)"><span>👑</span><b>Suite</b></button>
+        </div>
+
+        <!-- ANUNCIO GRANDE DESPUÉS DE SELECCIÓN -->
+        <div class="ad-banner-box" style="margin-top:20px;">
+          <p class="ad-label">PUBLICIDAD / ANUNCIO</p>
+          <div class="ad-content">📢 Anuncio Patrocinado</div>
+        </div>
+
+        <button id="btnIrUbicacion" class="btn-primary-red" style="display:none; margin-top:20px; width:100%;" onclick="siguientePaso(2)">Continuar a Ubicación ➡️</button>
+      </div>
+
+    </section>
+
+    <!-- PASO 2: UBICACIÓN -->
     <section id="step-2" class="step-card">
-      <h2>2. Selecciona la Ubicación</h2>
+      <h2>3. Selecciona la Ubicación</h2>
       
       <div class="form-group">
         <label for="selectEstado">Estado:</label>
@@ -91,7 +95,7 @@
 
     <!-- PASO 3: FECHAS Y BÚSQUEDA -->
     <section id="step-3" class="step-card">
-      <h2>3. Selecciona tus Fechas</h2>
+      <h2>4. Selecciona tus Fechas</h2>
       
       <div class="form-group">
         <label for="fechaEntrada">Fecha de Entrada:</label>
@@ -113,27 +117,41 @@
     <section id="step-4" class="step-card">
       <h2>Alojamientos Disponibles</h2>
       <div id="contenedorHoteles" class="hotels-grid"></div>
-      <p id="noResults" style="display:none; text-align:center; padding: 20px;">No se encontraron alojamientos para este filtro.</p>
+      <p id="noResults" style="display:none; text-align:center; padding: 20px;">No se encontraron alojamientos con esos filtros.</p>
       <button class="btn-secondary" onclick="siguientePaso(1)" style="margin-top:15px;">Nueva Búsqueda 🔄</button>
     </section>
 
   </main>
 
-  <!-- BOTÓN FLOTANTE DEL PANDA EN LA ESQUINA -->
-  <div id="pandaFloatingBtn" class="panda-float-corner" onclick="reabrirPanda()">
-    <img src="panda-normal.png" alt="Ayuda Panda">
+  <!-- PANDA FLOTANTE DE AYUDA -->
+  <div id="pandaFloatingBtn" class="panda-float-corner" onclick="abrirTutorialCompleto()">
+    <img src="panda-normal.png" alt="Ayuda Panda" onerror="this.src='https://via.placeholder.com/60?text=Panda'">
     <span>¿Ayuda?</span>
   </div>
 
-  <!-- MODAL DE PAGO Y VERIFICACIÓN -->
+  <!-- MODAL TUTORIAL COMPLETO -->
+  <div id="modalTutorial" class="modal-overlay" style="display:none;">
+    <div class="modal-content text-center">
+      <span class="close-btn" onclick="cerrarTutorial()">&times;</span>
+      <div class="panda-avatar-tutorial">
+        <img id="imgPandaTut" src="panda-saludando.png" alt="Panda" onerror="this.src='https://via.placeholder.com/80?text=Panda'">
+      </div>
+      <h3 id="tutTitulo">Asistente Carmesí 🐼</h3>
+      <p id="tutDescripcion" class="tut-text">Te guiaré paso a paso sobre cómo reservar con nosotros.</p>
+      <div class="tutorial-actions">
+        <button id="btnTutAnterior" class="btn-secondary" style="display:none;" onclick="cambiarPasoTutorial(-1)">⬅️ Anterior</button>
+        <button id="btnTutSiguiente" class="btn-primary-red" onclick="cambiarPasoTutorial(1)">Siguiente ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE PAGO -->
   <div id="modalPago" class="modal-overlay" style="display:none;">
     <div class="modal-content">
       <span class="close-btn" onclick="cerrarModal()">&times;</span>
-      
       <h3 id="modalHotelName">Reserva de Alojamiento</h3>
       <p class="timer-text">⏰ Tiempo para reservar: <span id="timerDisplay">15:00</span></p>
 
-      <!-- Resumen de Precios -->
       <div class="price-summary">
         <p>Precio Normal: <span id="pNormal">USD $0</span></p>
         <p><strong>Precio FindBed: <span id="pFindBed">USD $0</span></strong></p>
@@ -141,7 +159,6 @@
         <p>Restante a pagar en Hotel: <span id="pSaldo">USD $0</span></p>
       </div>
 
-      <!-- Datos de Pago Móvil -->
       <div class="pago-movil-info">
         <h4>Datos para Pago Móvil (Venezuela)</h4>
         <p><strong>Banco:</strong> 0102 - Banco de Venezuela</p>
@@ -149,7 +166,6 @@
         <p><strong>Teléfono:</strong> 0412-0000000 <button class="btn-copy" onclick="copiarTexto('04120000000')">📋</button></p>
       </div>
 
-      <!-- Formulario de Entrada -->
       <div id="pagoFormBox">
         <div class="form-group">
           <label for="inputRef">N° de Referencia Bancaria:</label>
@@ -162,14 +178,11 @@
         <button class="btn-confirm" onclick="enviarComprobante()">Enviar Comprobante 🔑</button>
       </div>
 
-      <!-- Estado de Verificación con Panda -->
       <div id="pagoStatusBox" style="display:none; text-align:center; padding: 15px;">
-        <img id="imgPandaStatus" src="panda-revisando.png" style="width: 100px; margin-bottom: 10px;" alt="Panda Estado">
         <p id="txtPandaStatus" style="font-size: 0.9rem; margin-bottom: 10px;"></p>
         <div id="codePandaStatus" class="code-box" style="display:none;"></div>
         <button class="btn-secondary" onclick="cerrarModal()" style="margin-top: 15px;">Cerrar</button>
       </div>
-
     </div>
   </div>
 
